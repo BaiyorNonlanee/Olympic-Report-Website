@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: 'https://my-json-server.typicode.com/BaiyorNonlanee/olympicDB',
+  baseURL: 'import.meta.env.VITE_BACKEND_URL',
   withCredentials: false,
   headers: {
     Accept: 'application/json',
