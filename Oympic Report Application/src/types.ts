@@ -6,8 +6,8 @@ export interface Country{
     gold: number,
     silver: number,
     bronze: number,
-    rank: number,
-    sports: Sport[]
+    rankValue: number,
+    sports: string
 }
 export interface Sport {
   name: string;
