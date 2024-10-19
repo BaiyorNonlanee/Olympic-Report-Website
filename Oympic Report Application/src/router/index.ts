@@ -39,7 +39,7 @@ const router = createRouter({
       component: NetworkErrorView
     },
     { 
-      path: '/country/:id',
+      path: '/countries/:id',
       name: 'layout-view',
       component: LayoutView,
       props: true,
