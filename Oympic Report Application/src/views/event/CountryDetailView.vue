@@ -15,7 +15,7 @@ const { country } = toRefs(props)
     <div class="flex">
       <!-- Left Column -->
       <div class="w-6/12 p-4">
-        <h2 class="text-center text-xs md:text-3xl">{{ country.country_name }}'s history at the Olympics</h2>
+        <h2 class="text-center text-xs md:text-3xl">{{ country.countryName }}'s history at the Olympics</h2>
         <div class="flex justify-center mt-4">
           <img class="rounded-lg" :src="country.image" />
         </div>

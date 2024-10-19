@@ -10,13 +10,13 @@ defineProps<{
 
 <template>
   <!-- Display a single row of table data -->
-  <td>{{ country.rank }}</td>
+  <td>{{ country.rankValue }}</td>
   <td>
     <RouterLink
       class="text-black underline hover:text-blue-500 hover:underline"
       :to="{ name: 'country-detail-view', params: { id: country.id } }"
     >
-      {{ country.country_name }}
+      {{ country.countryName }}
     </RouterLink>
   </td>
   <td>{{ country.gold }}</td>

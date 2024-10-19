@@ -1,13 +1,13 @@
 export interface Country{
     id: number,
-    country_name: string,
+    countryName: string,
     description: string,
     image: string,
     gold: number,
     silver: number,
     bronze: number,
     rankValue: number,
-    sports: string
+    sports: Sport[]
 }
 export interface Sport {
   name: string;

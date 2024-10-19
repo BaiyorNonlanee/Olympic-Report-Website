@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: 'https://my-json-server.typicode.com/BaiyorNonlanee/olympicDB', 
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   withCredentials: false,
   headers: {
     Accept: 'application/json',
@@ -11,9 +11,9 @@ const apiClient = axios.create({
 
 export default {
   getCountries(perPage: number, page: number) {
-    return apiClient.get('/country?_limit=' + perPage + '&_page=' + page)
+    return apiClient.get('/countries?_limit=' + perPage + '&_page=' + page)
   },
   getCountry(id: string) {
-    return apiClient.get('/country/' + id)
+    return apiClient.get('/countries/' + id)
   }
 }
