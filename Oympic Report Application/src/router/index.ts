@@ -9,6 +9,7 @@ import NetworkErrorView from '@/views/NetWorkErrorView.vue'
 import InfoService from '@/services/InfoService'
 import nProgress from 'nprogress'
 import { useInfoStore } from '@/stores/country'
+import LoginView from '@/views/LoginView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,11 @@ const router = createRouter({
         page: parseInt(route.query.page?.toString() || '1'),
         limit: parseInt(route.query.limit?.toString() || '5')
       })
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView
     },
     {
       path: '/404/:resource',
