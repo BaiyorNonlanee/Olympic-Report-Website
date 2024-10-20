@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import InputText from '@/components/InputText.vue';
+import {ref} from 'vue'
+const email = ref('')
+const password = ref('')
+</script>
+
 <template>
     <div class="flex flex-col lg:flex-row min-h-screen">
       <!-- Left side for image -->
@@ -23,7 +30,7 @@
           <form class="space-y-6 lg:space-y-12" action="#" method="POST">
             <div>
               <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email Address</label>
-              <input type="email" id="email" placeholder="Email address" class="block w-full rounded-md border-0 py-1.5" />
+              <InputText type="email" v-model="email" placeholder="Email address" class="block w-full rounded-md border-0 py-1.5 px-4 text-lg" />
             </div>
   
             <div>
@@ -33,7 +40,7 @@
                   <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
                 </div>
               </div>
-              <input type="password" id="password" placeholder="Password" class="block w-full rounded-md border-0 py-1.5" />
+              <InputText type="password" v-model="password" placeholder="Password" class="block w-full rounded-md border-0 py-1.5 px-4" />
             </div>
   
             <div>
