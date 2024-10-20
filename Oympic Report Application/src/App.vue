@@ -5,9 +5,13 @@
 <template>
   <div>
     <router-view />
-  </div>
-</template>
 
+    <router-link to="/add-data">
+    <button class="btn-add-data">Go to Add Data</button>
+  </router-link>
+  </div>
+
+</template>
 <style scoped>
 .header {
   text-align: center;

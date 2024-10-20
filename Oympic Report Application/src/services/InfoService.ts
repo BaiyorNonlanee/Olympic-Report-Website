@@ -1,3 +1,4 @@
+import type { Country } from '@/types'
 import axios from 'axios'
 
 const apiClient = axios.create({
@@ -15,5 +16,8 @@ export default {
   },
   getCountry(id: string) {
     return apiClient.get('/countries/' + id)
-  }
+  },
+  saveCountry(country: Country){
+    return apiClient.post('/countries' , country)
+  },
 }

@@ -10,6 +10,7 @@ export interface Country{
     sports: Sport[]
 }
 export interface Sport {
+  id: number
   name: string;
   gold_medals: number;
   silver_medals: number;
@@ -18,4 +19,6 @@ export interface Sport {
 export interface InfoState{
   country: Country | null
 }
- 
+export interface MessageState {
+  message: string
+}
