@@ -5,6 +5,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import 'nprogress/nprogress.css'
 import './assets/style.css'
+import '@/services/AxiosInterceptorSetup'
 
 
 

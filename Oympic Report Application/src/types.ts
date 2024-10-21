@@ -18,4 +18,7 @@ export interface Sport {
 export interface InfoState{
   country: Country | null
 }
+export interface MessageState {
+  message: string
+}
  
