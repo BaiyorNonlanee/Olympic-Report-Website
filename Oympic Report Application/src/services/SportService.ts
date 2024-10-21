@@ -3,7 +3,7 @@ import  { type AxiosResponse } from 'axios'
 import apiClient from './AxiosClient';
 
 export default {
-    getports() {
+    getSports() {
         return apiClient.get('/sports')
     },
     // Save a new event

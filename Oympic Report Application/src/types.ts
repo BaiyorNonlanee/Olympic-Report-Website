@@ -2,7 +2,7 @@ export interface Country{
     id: number,
     countryName: string,
     description: string,
-    image: string,
+    image: string[],
     gold: number,
     silver: number,
     bronze: number,
