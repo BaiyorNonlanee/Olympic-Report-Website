@@ -22,6 +22,8 @@ actions: {
         })
         .then((response) => {
             this.token = response.data.access_token
+            localStorage.setItem('access_token', this.token as string)
+            axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
             return response
         })
     }
