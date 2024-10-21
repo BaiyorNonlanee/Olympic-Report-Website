@@ -30,6 +30,11 @@ const router = createRouter({
       component: LoginView
     },
     {
+      path: '/add-data',
+      name: 'add-data',
+      component: AddDataView
+    },
+    {
       path: '/404/:resource',
       name: '404-resource-view',
       component: NotFoundView,

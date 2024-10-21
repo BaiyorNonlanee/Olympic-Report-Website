@@ -18,7 +18,7 @@ const country = ref<Country>({
   bronze: 0,
   rankValue: 0,
   sports: {
-    id: 0,
+    id: 0 ,
     name: '',
     gold_medals: 0,
     silver_medals: 0,
@@ -44,7 +44,7 @@ function saveCountry() {
 
 const sports = ref<Sport[]>([]);
 onMounted(() => {
-  SportService.getSports()  // แก้จาก getports เป็น getSports
+  SportService.getSports() 
     .then((response) => {
       sports.value = response.data;
     })
