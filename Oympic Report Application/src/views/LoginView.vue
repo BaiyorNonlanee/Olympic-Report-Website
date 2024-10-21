@@ -1,9 +1,24 @@
 <script setup lang="ts">
 import InputText from '@/components/InputText.vue';
-import {ref} from 'vue'
-const email = ref('')
-const password = ref('')
-</script>
+import * as yup from 'yup'
+import { useField, useForm } from 'vee-validate';
+const validationSchema = yup.object({
+  email: yup.string().required('The email is required').email('Input must be an email.'),
+  password: yup.string().required('The password is required').min(6,'The password must be at least 6 characters.')
+})
+const {errors, handleSubmit} = useForm({
+  validationSchema,
+  initialValues: {
+    email: '',
+    password: ''
+  }
+})
+const {value:email} = useField<string>('email')
+const {value: password} = useField<string>('password')
+const onSubmit = handleSubmit((values) => {
+  console.log(values)
+})
+  </script>
 
 <template>
     <div class="flex flex-col lg:flex-row min-h-screen">
@@ -27,10 +42,10 @@ const password = ref('')
         </div>
   
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-          <form class="space-y-6 lg:space-y-12" action="#" method="POST">
+          <form class="space-y-6 lg:space-y-12" @submit.prevent="onSubmit">
             <div>
               <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email Address</label>
-              <InputText type="email" v-model="email" placeholder="Email address" class="block w-full rounded-md border-0 py-1.5 px-4 text-lg" />
+              <InputText type="email" v-model="email" placeholder="Email address" class="block w-full rounded-md border-0 py-1.5 px-4 text-lg" :error="errors['email']" />
             </div>
   
             <div>
@@ -40,7 +55,7 @@ const password = ref('')
                   <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
                 </div>
               </div>
-              <InputText type="password" v-model="password" placeholder="Password" class="block w-full rounded-md border-0 py-1.5 px-4" />
+              <InputText type="password" v-model="password" placeholder="Password" class="block w-full rounded-md border-0 py-1.5 px-4" :error="errors['password']" />
             </div>
   
             <div>
