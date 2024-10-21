@@ -10,6 +10,7 @@ import InfoService from '@/services/InfoService'
 import nProgress from 'nprogress'
 import AddDataView from '@/views/event/DataFormView.vue' 
 import { useInfoStore } from '@/stores/country'
+import LoginView from '@/views/LoginView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,10 +25,9 @@ const router = createRouter({
       })
     },
     {
-      path: '/add-data',
-      name: 'add-data',
-      component: AddDataView,
-      props: true
+      path: '/login',
+      name: 'login',
+      component: LoginView
     },
     {
       path: '/404/:resource',
