@@ -9,6 +9,7 @@ import NetworkErrorView from '@/views/NetWorkErrorView.vue'
 import InfoService from '@/services/InfoService'
 import nProgress from 'nprogress'
 import AddDataView from '@/views/event/DataFormView.vue' 
+import MainPage from '@/App.vue'
 import { useInfoStore } from '@/stores/country'
 import LoginView from '@/views/LoginView.vue'
 
@@ -34,6 +35,11 @@ const router = createRouter({
       name: 'add-data',
       component: AddDataView
     },
+    {
+      path: '/main-page',
+      name: 'main-page',
+      component: MainPage,
+    },    
     {
       path: '/404/:resource',
       name: '404-resource-view',

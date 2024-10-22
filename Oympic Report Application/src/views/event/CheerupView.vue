@@ -16,7 +16,7 @@ const newComment = ref('')
 
 const addComment = () => {
   if (newComment.value.trim()) {
-    commentsStore.addComment(props.country.country_name, newComment.value)
+    commentsStore.addComment(props.country.countryName, newComment.value)
     newComment.value = ''
   }
 }
@@ -28,8 +28,8 @@ const addComment = () => {
 
     <div
       v-if="
-        commentsStore.commentsByCountry[props.country.country_name] &&
-        commentsStore.commentsByCountry[props.country.country_name].length
+        commentsStore.commentsByCountry[props.country.countryName] &&
+        commentsStore.commentsByCountry[props.country.countryName].length
       "
       class="my-4"
     >
@@ -38,7 +38,7 @@ const addComment = () => {
     
     <div class="w-95%" >
       <div
-        v-for="comment in commentsStore.commentsByCountry[props.country.country_name]"
+        v-for="comment in commentsStore.commentsByCountry[props.country.countryName]"
         :key="comment.id"
         class="bg-customBrown2 border-2 border-customBrown1 rounded-lg p-4 my-1.5 text-lg text-left"
       >
