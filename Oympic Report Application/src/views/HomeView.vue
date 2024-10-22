@@ -30,6 +30,10 @@ const userLimit = ref<number>(props.limit);
 const limit = computed(() => userLimit.value || props.limit);
 const page = computed(() => props.page);
 
+function goToAddData() {
+  router.push({ name: 'add-data' }); 
+}
+
 const hasNextPage = computed(() => {
   const totalPage = Math.ceil(totalCountry.value / limit.value);
   return page.value < totalPage;
@@ -148,4 +152,12 @@ function logout() {
       </div>
     </div>
   </div>
+  <div class="flex justify-center mt-4 space-x-4"> <!-- เพิ่ม space-x-4 เพื่อเว้นระยะระหว่างปุ่ม -->
+      <button
+        @click="goToAddData"
+        class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+      >
+        Add Data
+      </button>
+    </div>
 </template>
