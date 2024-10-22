@@ -16,12 +16,12 @@ const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBro
   totalGold.value = totals.totalGold;
   totalSilver.value = totals.totalSilver;
   totalBronze.value = totals.totalBronze;
+
 };
 
 </script>
 
 <template>
-  <td>{{ country.rankValue }}</td>
   <td>
     <RouterLink
       class="text-black underline hover:text-blue-500 hover:underline"
@@ -35,3 +35,4 @@ const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBro
   <td>{{ totalSilver }}</td>
   <td>{{ totalBronze }}</td>
 </template>
+
