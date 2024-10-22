@@ -29,13 +29,25 @@ const router = useRouter();
 const store = useMessageStore();
 
 function saveCountry() {
+  const token = localStorage.getItem('authToken'); // ดึง token จาก local storage
+  if (!token) {
+    console.error('No token found, please log in again.');
+    return; // หรือจัดการอย่างอื่นตามที่ต้องการ
+  }
+
   InfoService.saveCountry(country.value)
     .then((response) => {
-      router.push({ name: 'event-detail-view', params: { id: response.data.id } });
-      store.updateMessage('You are successfully adding a new event for ' + response.data.title);
-      setTimeout(() => {
-        store.resetMessage();
-      }, 3000);
+      if (response.data && response.data.id) {
+        // นำทางไปยังหน้าที่ต้องการหลังจากบันทึกสำเร็จ
+        router.push({ name: 'new-page-name' }); // กำหนดชื่อเส้นทางของหน้าใหม่ที่คุณต้องการไป
+
+        store.updateMessage('Successfully added a new country: ' + response.data.countryName);
+        setTimeout(() => {
+          store.resetMessage();
+        }, 3000);
+      } else {
+        console.error('Invalid response:', response);
+      }
     })
     .catch(() => {
       router.push({ name: 'network-error-view' });
@@ -44,7 +56,7 @@ function saveCountry() {
 
 const sports = ref<Sport[]>([]);
 onMounted(() => {
-  SportService.getSports()  // แก้จาก getports เป็น getSports
+  SportService.getSports() 
     .then((response) => {
       sports.value = response.data;
     })
