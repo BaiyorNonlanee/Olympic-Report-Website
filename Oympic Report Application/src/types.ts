@@ -10,16 +10,19 @@ export interface Country{
     sports: Sport[]
     roles: string[]
 }
+
 export interface Sport {
-  id: number
-  name: string;
+  id: number;
+  sportName: string; // Updated from name to sportName to match your API
   gold_medals: number;
   silver_medals: number;
   bronze_medals: number;
 }
-export interface InfoState{
-  country: Country | null
+
+export interface InfoState {
+  country: Country | null;
 }
+
 export interface MessageState {
-  message: string
+  message: string;
 }

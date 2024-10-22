@@ -1,15 +1,26 @@
 <script setup lang="ts">
-import { type Country } from '@/types'
-import { defineProps } from 'vue'
-import { RouterLink } from 'vue-router'
+import { ref, defineProps } from 'vue'; 
+import { type Country } from '@/types';
+import { RouterLink } from 'vue-router';
+import SportListView from "@/views/event/SportListView.vue"
 
-defineProps<{
-  country: Country
-}>()
+const props = defineProps<{
+  country: Country;
+}>();
+
+const totalGold = ref(0);
+const totalSilver = ref(0);
+const totalBronze = ref(0);
+
+const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBronze: number }) => {
+  totalGold.value = totals.totalGold;
+  totalSilver.value = totals.totalSilver;
+  totalBronze.value = totals.totalBronze;
+};
+
 </script>
 
 <template>
-  <!-- Display a single row of table data -->
   <td>{{ country.rankValue }}</td>
   <td>
     <RouterLink
@@ -18,9 +29,9 @@ defineProps<{
     >
       {{ country.countryName }}
     </RouterLink>
+    <SportListView :country="country" @updateTotals="updateTotals" v-show="false" />
   </td>
-  <td>{{ country.gold }}</td>
-  <td>{{ country.silver }}</td>
-  <td>{{ country.bronze }}</td>
+  <td>{{ totalGold }}</td>
+  <td>{{ totalSilver }}</td>
+  <td>{{ totalBronze }}</td>
 </template>
-<style scoped></style>
