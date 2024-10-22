@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, watch, defineProps } from 'vue'
 import { onMounted } from 'vue'
-
 import InfoService from '@/services/InfoService';
-
 import olympicInfo from '@/components/olympicInfo.vue'
 import { type Country } from '@/types'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiAccount } from '@mdi/js'
+import { mdiLogout } from '@mdi/js';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
 const countries = ref<Country[] | null>(null)
 const totalCountry = ref(0)
+const authStore = useAuthStore()
+const router = useRouter()
 
 const props = defineProps({
   page: {
@@ -49,50 +52,69 @@ watchEffect(() => {
       console.error('Error fetching data:', error)
     })
 })
+
+const token = localStorage.getItem('token')
+const user = localStorage.getItem('user')
+
+if(token && user){
+  authStore.reload(token, JSON.parse(user))
+}else{
+  authStore.logout()
+}
+
+function logout() {
+  authStore.logout()
+  router.push({name: 'login'})
+}
 </script>
 
 <template>
-  <div class="container-fluid">
-    <nav class="navbar bg-black p-4 flex items-center justify-center">
-      <!-- <nav class="flex">
-            <ul v-if="!authStore.currentUserName" class="flex navbar-nav ml-auto" >
-              <li class="nav-item px-2">
-                <router-link to="/register" class="nav-link">
-                  <div class="flex items-center">
-                    <span class="ml-3">Sign Up</span>
-                  </div>
-                </router-link>
-              </li>
-              <li class="nav-item px-2">
-                <router-link to="/login" class="nav-link">
-                  <div class="flex items-center">
-                    <span class="ml-3">Login</span>
-                  </div>
-                </router-link>
-              </li>
-            </ul>
-            <ul v-if="authStore.currentUserName" class="flex navbar-nav ml-auto">
-              <li class="nav-item px-2">
-                <router-link to="/profile" class="nav-link">
-                  <div class="flex items-center">
-                    <span class="ml-3">{{ authStore.currentUserName }}</span>
-                  </div>
-                </router-link>
-              </li>
-              <li class="nav-item px-2">
-                <a class="nav-link hover:cursor-pointer" @click="logout">
-                  <div class="flex items-center">
-                    <span class="ml-3">LogOut</span>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </nav> -->
-      <img
-        src="@/assets/logo-2.png"
-        alt="Logo"
-        class="w-[120px] h-[120px] md:w-[150px] md:h-[150px]"
-      />
+  <div class="wrapper">
+    <!-- Navbar with user authentication -->
+    <nav class="navbar bg-black p-4 flex items-center justify-between">
+      
+      <!-- Center the logo -->
+  <div class="flex-1 flex justify-center">
+    <img
+      src="@/assets/logo-2.png"
+      alt="Logo"
+      class="w-[120px] h-[120px] md:w-[150px] md:h-[150px]"
+    />
+  </div>
+      
+      <!-- User Authentication Links -->
+      <ul v-if="!authStore.currentUserName" class="flex navbar-nav ml-auto text-white">
+        <li class="nav-item px-2">
+          <router-link to="/register" class="nav-link">
+            <div class="flex items-center">
+              <span class="ml-3">Sign Up</span>
+            </div>
+          </router-link>
+        </li>
+        <li class="nav-item px-2">
+          <router-link to="/login" class="nav-link">
+            <div class="flex items-center">
+              <span class="ml-3">Login</span>
+            </div>
+          </router-link>
+        </li>
+      </ul>
+      <ul v-if="authStore.currentUserName" class="flex navbar-nav ml-auto  text-white">
+        <li class="nav-item px-2">
+          <router-link to="/profile" class="nav-link">
+            <div class="flex items-center">
+              <span class="ml-3">{{ authStore.currentUserName }}</span>
+            </div>
+          </router-link>
+        </li>
+        <li class="nav-item px-2">
+          <a class="nav-link hover:cursor-pointer text-white" @click="logout">
+            <div class="flex items-center">
+              <span class="ml-3">LogOut</span>
+            </div>
+          </a>
+        </li>
+      </ul>
     </nav>
     <div class="flex flex-col md:flex-row">
       <!-- Left Column (Text and Table) -->
