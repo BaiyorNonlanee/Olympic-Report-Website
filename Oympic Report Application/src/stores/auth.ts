@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia'
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
+import type { Country } from '@/types'
 const apiClient: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
     withCredentials: false,
@@ -11,8 +12,20 @@ const apiClient: AxiosInstance = axios.create({
 })
 export const useAuthStore = defineStore('auth',{
     state: () => ({
-        token: null as string || null
+        token: null as string | null ,
+        user: null as Country | null
 }),
+getters: {
+    currentUserName(): string{
+        return this.user?.countryName || ''
+    },
+    isAdmin(): boolean{
+        return this.user?.roles.includes('ROLE_ADMIN') || false
+    },
+    authorizationHeader() : string {
+        return `Bearer ${ this.token }`
+    }
+},
 actions: {
     login(email: string, password: string){
         return apiClient
@@ -22,10 +35,24 @@ actions: {
         })
         .then((response) => {
             this.token = response.data.access_token
-            localStorage.setItem('access_token', this.token as string)
+            this.user = response.data.user
+            localStorage.setItem('token', this.token as string)
+            localStorage.setItem('user', JSON.stringify(this.user))
             axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
             return response
         })
+    },
+    reload(token: string, user: SportCountry){
+        this.token = token
+        this.user = user
+    },
+    logout(){
+        console.log('logout')
+        this.token = null
+        this.user = null
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('user')
     }
+  
 }
 })
