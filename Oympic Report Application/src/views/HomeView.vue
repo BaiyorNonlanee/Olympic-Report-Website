@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, defineProps } from 'vue';
+import { ref, computed, watchEffect, watch, defineProps } from 'vue'
+import { onMounted } from 'vue'
 import InfoService from '@/services/InfoService';
-import olympicInfo from '@/components/olympicInfo.vue';
-import { type Country } from '@/types';
+import olympicInfo from '@/components/olympicInfo.vue'
+import { type Country } from '@/types'
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiAccount } from '@mdi/js'
+import { mdiLogout } from '@mdi/js';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
-const countries = ref<Country[] | null>(null);
-const totalCountry = ref(0);
+const countries = ref<Country[] | null>(null)
+const totalCountry = ref(0)
+const authStore = useAuthStore()
+const router = useRouter()
 
 const props = defineProps({
   page: {
@@ -35,33 +43,72 @@ watchEffect(() => {
       totalCountry.value = parseInt(response.headers['x-total-count']);
     })
     .catch((error) => {
-      console.error('Error fetching data:', error);
-    });
-});
+      console.error('Error fetching data:', error)
+    })
+})
 
-// Function to sort countries based on gold medals
-const sortCountries = () => {
-  if (countries.value) {
-    countries.value.sort((a, b) => {
-      const aGold = a.ownSports.reduce((sum, sport) => sum + sport.gold_medals, 0);
-      const bGold = b.ownSports.reduce((sum, sport) => sum + sport.gold_medals, 0);
-      return bGold - aGold; // Sort in descending order
-    });
-  }
-};
+const token = localStorage.getItem('token')
+const user = localStorage.getItem('user')
 
-// Watch for updates in countries to sort them
-watchEffect(() => {
-  if (countries.value) {
-    sortCountries();
-  }
-});
+if(token && user){
+  authStore.reload(token, JSON.parse(user))
+}else{
+  authStore.logout()
+}
+
+function logout() {
+  authStore.logout()
+  router.push({name: 'login'})
+}
 </script>
 
 <template>
-  <div class="container-fluid">
-    <nav class="navbar bg-black p-4 flex items-center justify-center">
-      <img src="@/assets/logo-2.png" alt="Logo" class="w-[120px] h-[120px] md:w-[150px] md:h-[150px]" />
+  <div class="wrapper">
+    <!-- Navbar with user authentication -->
+    <nav class="navbar bg-black p-4 flex items-center justify-between">
+      
+      <!-- Center the logo -->
+  <div class="flex-1 flex justify-center">
+    <img
+      src="@/assets/logo-2.png"
+      alt="Logo"
+      class="w-[120px] h-[120px] md:w-[150px] md:h-[150px]"
+    />
+  </div>
+      
+      <!-- User Authentication Links -->
+      <ul v-if="!authStore.currentUserName" class="flex navbar-nav ml-auto text-white">
+        <li class="nav-item px-2">
+          <router-link to="/register" class="nav-link">
+            <div class="flex items-center">
+              <span class="ml-3">Sign Up</span>
+            </div>
+          </router-link>
+        </li>
+        <li class="nav-item px-2">
+          <router-link to="/login" class="nav-link">
+            <div class="flex items-center">
+              <span class="ml-3">Login</span>
+            </div>
+          </router-link>
+        </li>
+      </ul>
+      <ul v-if="authStore.currentUserName" class="flex navbar-nav ml-auto  text-white">
+        <li class="nav-item px-2">
+          <router-link to="/profile" class="nav-link">
+            <div class="flex items-center">
+              <span class="ml-3">{{ authStore.currentUserName }}</span>
+            </div>
+          </router-link>
+        </li>
+        <li class="nav-item px-2">
+          <a class="nav-link hover:cursor-pointer text-white" @click="logout">
+            <div class="flex items-center">
+              <span class="ml-3">LogOut</span>
+            </div>
+          </a>
+        </li>
+      </ul>
     </nav>
     <div class="flex flex-col md:flex-row">
       <div class="w-full md:w-6/12 p-4 order-2 md:order-1">
