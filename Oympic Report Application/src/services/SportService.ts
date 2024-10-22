@@ -6,11 +6,13 @@ export default {
     getSports() {
         return apiClient.get('/sports')
     },
-    // Save a new event
     saveSport(sport: Sport) {
         return apiClient.post('/sports', sport)
     },
     getSportById(id: number): Promise<AxiosResponse<Sport>> {
         return apiClient.get<Sport>(`/sports/${id}`)
     },
+    updateSport(id: number, sport: Sport): Promise<AxiosResponse<Sport>> {
+        return apiClient.put<Sport>(`/sports/${id}`, sport);  
+      }
 }
