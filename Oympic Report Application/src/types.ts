@@ -7,8 +7,9 @@ export interface Country{
     silver: number,
     bronze: number,
     rankValue: number,
-    sports: Sport[]
-    roles: string[]
+    roles: string[] | null,
+    images: string[],
+    sport: Sport
 }
 
 export interface Sport {
@@ -17,6 +18,7 @@ export interface Sport {
   gold_medals: number;
   silver_medals: number;
   bronze_medals: number;
+  images: string[]
 }
 
 export interface InfoState {

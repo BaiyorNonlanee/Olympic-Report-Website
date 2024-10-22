@@ -13,7 +13,7 @@ const validationSchema = yup.object({
   password: yup.string().required('The password is required')
 })
 
-const { errors, handleSubmit } = useForm({
+const { errors, handleSubmit, isSubmitting } = useForm({
   validationSchema,
   initialValues: {
     email: '',
@@ -51,13 +51,6 @@ const onSubmit = handleSubmit((values) => {
     <!-- Right side for form -->
     <div class="w-full lg:w-1/2 px-6 py-12 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <!-- Register section -->
-        <p class="text-right text-sm text-gray-500 mb-6 lg:mb-20">
-          Not a member?
-          <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-            >Register here</a
-          >
-        </p>
 
         <!-- Sign in header -->
         <h2
@@ -105,6 +98,7 @@ const onSubmit = handleSubmit((values) => {
           <div>
             <button
               type="submit"
+              :disabled="isSubmitting"
               class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Sign in
@@ -114,7 +108,7 @@ const onSubmit = handleSubmit((values) => {
         <p class="mt-10 text-center text-sm text-gray-500">
           Not a member?
           {{ ' ' }}
-          <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+          <a href="/register" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >Try to register here</a
           >
         </p>
