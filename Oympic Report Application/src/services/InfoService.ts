@@ -8,7 +8,6 @@ export default {
   getCountry(id: string) {
     return apiClient.get('/countries/' + id)
   },
-  // ตัวอย่างการเรียกใช้ POST
   saveCountry(country: Country) {
   return apiClient.post('/countries', country);
   }
