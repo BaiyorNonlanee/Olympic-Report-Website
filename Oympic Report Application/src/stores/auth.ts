@@ -19,12 +19,8 @@ export const useAuthStore = defineStore('auth', {
     currentUserName(): string {
       return this.user?.countryName || ''
     },
-    // isAdmin(): boolean {
-    //   return this.user?.roles.includes('ROLE_ADMIN') || false
-    // }
-    isAdmin() : boolean {
-      const roles = this.user?.roles; // ตรวจสอบว่ามี user หรือ roles ก่อน
-      return roles?.includes('admin') || false; // ตรวจสอบก่อนใช้ includes
+    isAdmin(): boolean {
+      return this.user?.roles.includes('ROLE_ADMIN') || false
     }
     ,
     authorizationHeader(): string {

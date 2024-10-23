@@ -30,9 +30,9 @@ const userLimit = ref<number>(props.limit);
 const limit = computed(() => userLimit.value || props.limit);
 const page = computed(() => props.page);
 
-function goToAddData() {
-  router.push({ name: 'add-data' }); 
-}
+// function goToAddData() {
+//   router.push({ name: 'add-data' }); 
+// }
 
 const hasNextPage = computed(() => {
   const totalPage = Math.ceil(totalCountry.value / limit.value);
@@ -65,8 +65,11 @@ function logout() {
   router.push({name: 'login'})
 }
 
+function goToAddData() {
+  router.push({ name: 'add-data' }); // เปลี่ยน 'add-data' ให้ตรงกับชื่อเส้นทางที่ใช้สำหรับหน้า add data
+}
 // function goToAddData() {
-//   router.push({ name: 'add-data' }); // เปลี่ยน 'add-data' ให้ตรงกับชื่อเส้นทางที่ใช้สำหรับหน้า add data
+//   router.push({ name: 'add-data' }); 
 // }
 </script>
 
