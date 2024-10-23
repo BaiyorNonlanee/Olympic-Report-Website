@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref, defineProps } from 'vue'; 
+import { ref, defineProps, onMounted } from 'vue'; 
 import { type Country } from '@/types';
 import { RouterLink } from 'vue-router';
 import SportListView from "@/views/event/SportListView.vue"
+import SportService from '@/services/SportService';
 
 const props = defineProps<{
   country: Country;
 }>();
+
 
 const totalGold = ref(0);
 const totalSilver = ref(0);
@@ -17,6 +19,15 @@ const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBro
   totalSilver.value = totals.totalSilver;
   totalBronze.value = totals.totalBronze;
 
+  onMounted(() => {
+    SportService.getSports()
+        .then(response => {
+            sports.value = response.data;
+        })
+        .catch(error => {
+            console.error("Error fetching sports data:", error);
+        });
+});
 };
 
 </script>

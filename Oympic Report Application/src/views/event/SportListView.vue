@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { defineProps, ref, computed, defineEmits, watchEffect } from 'vue'
 import type { Country, Sport } from '@/types'
+import SportService from '@/services/SportService';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const props = defineProps<{
   country: Country
 }>()
+
 
 const emit = defineEmits(['updateTotals', 'updateCountry']);
 
@@ -34,10 +40,31 @@ const toggleEdit = () => {
   isEditing.value = !isEditing.value;
 };
 
-const submitChanges = () => {
-  emit('updateCountry', editedSports.value);
-  isEditing.value = false; // Exit edit mode after submitting
+// const submitChanges = () => {
+//   emit('updateCountry', editedSports.value);
+//   isEditing.value = false; 
+// };
+
+
+const submitChanges = async () => {
+  try {
+    for (const sport of editedSports.value) {
+      const response = await SportService.updateSport(sport.id, sport) 
+      console.log('Sport updated:', response.data);
+    }
+    emit('updateCountry', editedSports.value); 
+    // emit('updateTotals', { totalGold, totalSilver, totalBronze });
+    
+    isEditing.value = false; 
+    router.push({ name: 'home-view' });
+
+  } catch (error) {
+    console.error('Error updating sports:', error);
+  }
 };
+
+
+
 </script>
 
 <template>
@@ -110,8 +137,8 @@ const submitChanges = () => {
 
     <!-- Buttons for editing and submitting -->
     <div class="mt-4 flex justify-end w-full max-w-screen-lg">
-      <button v-if="!isEditing" @click="toggleEdit" class="px-4 py-2 bg-red-500 text-white rounded-full">Edit</button>
-      <button v-if="isEditing" @click="submitChanges" class="ml-2 px-4 py-2 bg-red-500 text-white rounded-full">Submit</button>
+      <button v-if="!isEditing" @click="toggleEdit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full">Edit</button>
+      <button v-if="isEditing" @click="submitChanges" class="ml-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full">Submit</button>
     </div>
   </div>
   <div v-else class="mt-4">
