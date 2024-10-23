@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
-import type { Country } from '@/types'
+import type { Country, User } from '@/types'
 const apiClient: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
   withCredentials: false,
@@ -13,11 +13,11 @@ const apiClient: AxiosInstance = axios.create({
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: null as string | null,
-    user: null as Country | null
+    user: null as User | null
   }),
   getters: {
     currentUserName(): string {
-      return this.user?.countryName || ''
+      return this.user?.firstname || ''  
     },
     isAdmin(): boolean {
       return this.user?.roles.includes('ROLE_ADMIN') || false
@@ -66,7 +66,7 @@ export const useAuthStore = defineStore('auth', {
           return response
         })
     },
-    reload(token: string, user: SportCountry) {
+    reload(token: string, user: User) {
       this.token = token
       this.user = user
     },

@@ -3,7 +3,7 @@ import { ref, computed, watchEffect, watch, defineProps } from 'vue'
 import { onMounted } from 'vue'
 import InfoService from '@/services/InfoService';
 import olympicInfo from '@/components/olympicInfo.vue'
-import { type Country } from '@/types'
+import { type Country, User} from '@/types'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiAccount } from '@mdi/js'
 import { mdiLogout } from '@mdi/js';
@@ -30,9 +30,9 @@ const userLimit = ref<number>(props.limit);
 const limit = computed(() => userLimit.value || props.limit);
 const page = computed(() => props.page);
 
-function goToAddData() {
-  router.push({ name: 'add-data' }); 
-}
+// function goToAddData() {
+//   router.push({ name: 'add-data' }); 
+// }
 
 const hasNextPage = computed(() => {
   const totalPage = Math.ceil(totalCountry.value / limit.value);
@@ -99,6 +99,11 @@ function goToAddData() {
               <span class="ml-3">Login</span>
             </div>
           </router-link>
+        </li>
+        <li>
+          <span v-if="authStore.isAdmin">
+        <RouterLink to="/list-user">List Of Users</RouterLink>
+       </span>
         </li>
       </ul>
       <ul v-if="authStore.currentUserName" class="flex navbar-nav ml-auto  text-white">
