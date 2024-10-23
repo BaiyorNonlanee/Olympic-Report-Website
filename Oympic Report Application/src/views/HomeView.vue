@@ -65,9 +65,9 @@ function logout() {
   router.push({name: 'login'})
 }
 
-function goToAddData() {
-  router.push({ name: 'add-data' }); // เปลี่ยน 'add-data' ให้ตรงกับชื่อเส้นทางที่ใช้สำหรับหน้า add data
-}
+// function goToAddData() {
+//   router.push({ name: 'add-data' }); // เปลี่ยน 'add-data' ให้ตรงกับชื่อเส้นทางที่ใช้สำหรับหน้า add data
+// }
 </script>
 
 <template>
