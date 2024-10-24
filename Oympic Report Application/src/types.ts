@@ -28,3 +28,13 @@ export interface InfoState {
 export interface MessageState {
   message: string;
 }
+
+export interface User {
+  id: number;
+  firstname: string;
+  lastname: string;
+  username: string;
+  email: string;
+  roles: string[] | null;
+}
+

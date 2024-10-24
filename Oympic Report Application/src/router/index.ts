@@ -13,6 +13,7 @@ import MainPage from '@/App.vue'
 import { useInfoStore } from '@/stores/country'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import UserView from '@/views/UserView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,6 +41,11 @@ const router = createRouter({
       path: '/add-data',
       name: 'add-data',
       component: AddDataView
+    },
+    {
+      path: '/list-user',
+      name: 'list-user',
+      component: UserView
     },
     {
       path: '/main-page',
