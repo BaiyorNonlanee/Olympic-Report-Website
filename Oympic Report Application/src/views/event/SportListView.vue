@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import type { Country } from '@/types';
 import SportService from '@/services/SportService';
 import InputTextSport from '@/components/InputTextSport.vue';
-import InputText from '@/components/InputText.vue';
+
 const router = useRouter();
 
 const props = defineProps<{ country: Country }>();

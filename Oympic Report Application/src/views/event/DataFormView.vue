@@ -9,7 +9,6 @@ import BaseInput from '@/components/BaseInput.vue'
 import ImageUpload from '@/components/ImageUpload.vue'
 import BaseSelect from '@/components/icons/BaseSelect.vue'
 import { number } from 'yup'
-import { log } from 'util'
 
 const country = ref<Country>({
   id: 0,
