@@ -35,6 +35,7 @@ export interface User {
   lastname: string;
   username: string;
   email: string;
+  images: string[],
   roles: string[] | null;
 }
 

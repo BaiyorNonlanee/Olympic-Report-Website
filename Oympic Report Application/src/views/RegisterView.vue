@@ -27,7 +27,7 @@ const { errors, handleSubmit, isSubmitting } = useForm({
     username: '',
     email: '',
     password: '',
-    image: null  // Add image field here
+    images: []  // Add image field here
   }
 });
 
@@ -36,7 +36,7 @@ const { value: lastname } = useField<string>('lastname');
 const { value: username } = useField<string>('username');
 const { value: email } = useField<string>('email');
 const { value: password } = useField<string>('password');
-const { value: image } = useField<File | null>('image');  // Add image field
+const { value: images } = useField<File | null>('image');  // Add image field
 
 const onSubmit = handleSubmit((values) => {
   authStore.register(values.firstname, values.lastname, values.username, values.email, values.password, values.image)
@@ -53,7 +53,7 @@ const onSubmit = handleSubmit((values) => {
 
 // Handle image upload and update the form's image field
 const handleImageUpload = (uploadedImage: File) => {
-  image.value = uploadedImage;
+  images.value = uploadedImage;
 };
 </script>
 
