@@ -35,6 +35,13 @@ export interface User {
   lastname: string;
   username: string;
   email: string;
-  roles: string[] | null;
+  role: Role;
+  
 }
+export interface Role {
+  id: number;
+  roles: string;
+}
+
+
 

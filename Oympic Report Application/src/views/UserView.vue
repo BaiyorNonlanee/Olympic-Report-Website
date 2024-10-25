@@ -1,88 +1,158 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch, defineProps } from 'vue'
-import { onMounted } from 'vue'
-import UserService from '@/services/UserService';
-import { type Country, User} from '@/types'
-import olympicInfo from '@/components/olympicInfo.vue'
-import { useAuthStore } from '@/stores/auth';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, computed } from 'vue'
+import UserService from '@/services/UserService'
+import BaseSelectRole from '@/components/BaseSelectRole.vue'
+import { useRouter } from 'vue-router'
+import { log } from 'util'
+import { Role } from '../types'
 
-
-const users = ref<User[] | null>(null)
-const totalUser = ref(0)
-const authStore = useAuthStore()
+const users = ref([])
+const isEditing = ref(false)
+const roleOptions = ref<Role[]>([]);
 const router = useRouter()
+const userJson: any = localStorage.getItem('user')
 
-const props = defineProps({
-  page: {
-    type: Number,
-    required: true,
-  },
-  limit: {
-    type: Number,
-    required: true,
-  },
-});
 
-const userLimit = ref<number>(props.limit);
-const limit = computed(() => userLimit.value || props.limit);
-const page = computed(() => props.page);
+const fetchData = async () => {
+  try {
+    const userResponse = await UserService.getUser();
+    const rolesResponse = await UserService.getRoleUser();
+    console.log("Roles response:", rolesResponse);
 
-// function goToAddData() {
-//   router.push({ name: 'add-data' }); 
-// }
+    // Filter and transform role options, excluding MASTERADMIN
+    roleOptions.value = rolesResponse.data
+      .filter((role: string) => role !== "ROLE_MASTERADMIN")
+      .map((role, index) => ({ id: index + 1, roles: role })); // Transform roles into the expected format
 
-const hasNextPage = computed(() => {
-  const totalPage = Math.ceil(totalUser.value / limit.value);
-  return page.value < totalPage;
-});
+    // Initialize users, filtering out those with ROLE_MASTERADMIN
+    users.value = userResponse.data
+      .filter(user => !user.roles.includes("ROLE_MASTERADMIN")) // Remove users with MASTERADMIN role
+      .map(user => {
+        // Get the ID for the first available role that is not MASTERADMIN
+        const currentRoleId = user.roles.length > 0
+          ? roleOptions.value.find(roleOption => roleOption.roles === user.roles[0])?.id
+          : null;
 
-// Fetch users
-watchEffect(() => {
-  UserService.getUser()
-    .then((response) => {
-      users.value = response.data;
-      totalUser.value = parseInt(response.headers['x-total-count']);
-    })
-    .catch((error) => {
-      console.error('Error fetching data:', error)
-    })
+        return {
+          ...user,
+          selectedRole: currentRoleId // Set selectedRole to the current role's ID or null if no valid roles
+        };
+      });
+
+    console.log("Filtered users:", users.value);
+  } catch (error) {
+    console.error('Error fetching users or roles:', error);
+  }
+};
+
+const updateSelectedRole = async (userId: number, selectedRole: number) => {
+  const user = users.value.find(user => user.id === userId);
+  if (user) {
+    user.selectedRole = selectedRole; // Update the user's selected role
+    await submitChanges()
+  }
+};
+
+
+onMounted(fetchData)
+
+const toggleEdit = () => {
+  isEditing.value = !isEditing.value
+}
+
+// Computed property to filter out MASTERADMIN
+const filteredRoleOptions = computed(() => {
+  return roleOptions.value.filter((role) => role.id !== 1) // Exclude MASTERADMIN
 })
 
+const submitChanges = async () => {
+  try {
+    // Update role สำหรับผู้ใช้แต่ละคน
+    await Promise.all(
+      users.value.map((user) => {
+        // ดึงชื่อ role จาก id ที่เลือก
+        const selectedRoleName = roleOptions.value.find(
+          (role) => role.id === user.selectedRole
+        )?.roles
+
+        // ตรวจสอบว่ามีการเลือก role หรือไม่
+        if (!selectedRoleName) {
+          console.warn(`No role selected for user ${user.id}`)
+          return Promise.resolve() // ไม่ทำอะไรถ้าไม่มีการเลือก role
+        }
+
+        console.log(user.selectedRole) // ควรใช้ user.selectedRole
+        console.log(user.id)
+
+        const users = JSON.parse(userJson)
+
+        // Access the id property
+        const userId = users.id
+        console.log(selectedRoleName[0]);
+        
+
+        // ส่ง id=1 สำหรับ MASTERADMIN, userId และ role
+        return UserService.editUserRole(userId, user.id, selectedRoleName)
+        
+      })
+    )
+
+    // alert('Roles updated successfully!');
+    toggleEdit()
+    await fetchData()
+    // window.location.reload();
+  } catch (error) {
+    console.error('Error updating roles:', error)
+  }
+}
 </script>
+
 <template>
-    <div>
-      <h1 class="text-center mb-6 text-2xl font-bold">User List</h1>
-      <table class="w-full max-w-screen-lg border-collapse bg-customBlue rounded-[30px] overflow-hidden">
-        <thead class="border-b border-gray-500">
-          <tr class="text-center bg-customPurple">
-            <th class="Outfit px-4 py-2 text-white">ID</th>
-            <th class="Outfit px-4 py-2 text-white">First Name</th>
-            <th class="Outfit px-4 py-2 text-white">Last Name</th>
-            <th class="Outfit px-4 py-2 text-white">Username</th>
-            <th class="Outfit px-4 py-2 text-white">Email</th>
-            <th class="Outfit px-4 py-2 text-white">Roles</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in users" :key="user.id" class="text-center odd:bg-white h-16">
-            <td>{{ user.id }}</td>
-            <td>{{ user.firstname }}</td>
-            <td>{{ user.lastname }}</td>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.roles?.join(', ') || 'No roles' }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <RouterLink
-              :to="{ name: 'home-view' }"
-              rel="next"
+  <div
+    v-if="users && users.length > 0"
+    class="flex flex-col justify-center items-center overflow-x-auto py-10 mt-4 px-4 sm:px-6"
+  >
+    <table
+      class="w-full max-w-screen-lg table-auto border-collapse bg-blue-100 rounded-[30px] overflow-hidden"
+    >
+      <thead class="border-b-2 border-gray-500">
+        <tr class="text-center bg-customPurple text-white">
+          <th class="Outfit px-2 py-2">ID</th>
+          <th class="Outfit px-2 py-2">First Name</th>
+          <th class="Outfit px-2 py-2">Last Name</th>
+          <th class="Outfit px-2 py-2">Username</th>
+          <th class="Outfit px-2 py-2">Email</th>
+          <th class="Outfit px-2 py-2">Roles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="user in users" :key="user.id" class="text-center odd:bg-white h-16">
+          <td>{{ user.id }}</td>
+          <td>{{ user.firstname }}</td>
+          <td>{{ user.lastname }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            
+              
+                <BaseSelectRole v-model="user.selectedRole" :options="roleOptions" @onChange="updateSelectedRole(user.id, $event)" />
+              
+             
+            
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <RouterLink
+              :to="{ name: 'home-view'}"
               class="inline-block px-4 py-2 bg-red-500 text-white rounded-[30px]"
             >
-            &#60; Back To Homepage
-            </RouterLink>
-    </div>
-    
-  </template>
+              &#60; Back to Homepage
+    </RouterLink>
+
   
+  </div>
+  <div v-else class="mt-4">
+    <p>No users data available.</p>
+  </div>
+</template>

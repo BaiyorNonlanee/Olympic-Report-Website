@@ -8,7 +8,7 @@ import SportService from '@/services/SportService'
 import BaseInput from '@/components/BaseInput.vue'
 import ImageUpload from '@/components/ImageUpload.vue'
 import BaseSelect from '@/components/icons/BaseSelect.vue'
-import { number } from 'yup'
+//import { Country } from '/types'
 
 const country = ref<Country>({
   id: 0,
