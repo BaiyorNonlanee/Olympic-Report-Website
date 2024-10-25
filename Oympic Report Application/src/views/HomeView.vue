@@ -87,15 +87,14 @@ function goToAddData() {
   <div class="wrapper">
     <!-- Navbar with user authentication -->
     <nav class="navbar bg-black p-4 flex items-center justify-between">
-      
       <!-- Center the logo -->
-  <div class="flex-1 flex justify-center">
-    <img
-      src="@/assets/logo-2.png"
-      alt="Logo"
-      class="w-[120px] h-[120px] md:w-[150px] md:h-[150px]"
-    />
-  </div>
+      <div class="flex-1 flex justify-center">
+        <img
+          src="@/assets/logo-2.png"
+          alt="Logo"
+          class="w-[120px] h-[120px] md:w-[150px] md:h-[150px]"
+        />
+      </div>
       
       <!-- User Authentication Links -->
       <ul v-if="!authStore.currentUserName" class="flex navbar-nav ml-auto text-white">
@@ -115,11 +114,11 @@ function goToAddData() {
         </li>
         <li>
           <span v-if="authStore.isAdmin">
-        <RouterLink to="/list-user">List Of Users</RouterLink>
-       </span>
+            <RouterLink to="/list-user">List Of Users</RouterLink>
+          </span>
         </li>
       </ul>
-      <ul v-if="authStore.currentUserName" class="flex navbar-nav ml-auto  text-white">
+      <ul v-if="authStore.currentUserName" class="flex navbar-nav ml-auto text-white">
         <li class="nav-item px-2">
           <router-link to="/profile" class="nav-link">
             <div class="flex items-center">
@@ -136,36 +135,43 @@ function goToAddData() {
         </li>
       </ul>
     </nav>
+    
     <div class="flex flex-col md:flex-row">
       <div class="w-full md:w-6/12 p-4 order-2 md:order-1">
-        <p class="text-blue-900 text-3xl md:text-5xl mt-8 ml-5 text-center md:text-left">THE BEST OF PARIS <br />2024 OLYMPIC GAMES</p>
-        <p
-          class="text-gray-900 opacity-30 ml-5 mt-1 mb-1 text-xs md:text-lg text-center md:text-left"
-        >
+        <p class="text-blue-900 text-3xl md:text-5xl mt-8 ml-5 text-center md:text-left">
+          THE BEST OF PARIS <br />2024 OLYMPIC GAMES
+        </p>
+        <p class="text-gray-900 opacity-30 ml-5 mt-1 mb-1 text-xs md:text-lg text-center md:text-left">
           The best moments, all in one place. Get unlimited <br />
           access to exclusive content, highlights, and replays of<br />
           the Paris 2024 Olympic Games.
         </p>
-         <!-- Form to Input Number of Countries -->
-         <div class="ml-5 mt-4">
+        
+        <!-- Form to Input Number of Countries -->
+        <div class="ml-5 mt-4 flex items-center">
           <form>
             <label for="countryLimit" class="mr-2">Number of countries per page:</label>
             <input
               id="countryLimit"
               type="number"
               v-model.number="userLimit"
-              class="px-2 py-1 border rounded"
+              class="px-2 py-1 border rounded mr-2"
               min="1"
               max="10"
               step="1"
               required
             />
           </form>
+          <span v-if="authStore.isAdmin">
+            <RouterLink 
+              to="/add-data" 
+              class="inline-block bg-blue-600 text-white font-regular py-2 px-4 rounded hover:bg-blue-500 transition"
+            >
+              Add New Country
+            </RouterLink>
+          </span>
         </div>
-        <span v-if="authStore.isAdmin">
-        <RouterLink to="/add-data">Add New Country</RouterLink>
-       </span>
-        
+
         <div class="block md:flex justify-start w-full overflow-x-auto mt-4">
           <table class="w-full max-w-screen-lg border-collapse bg-customBlue rounded-[30px] overflow-hidden">
             <thead class="border-b border-gray-500">
@@ -197,8 +203,9 @@ function goToAddData() {
             </tbody>
           </table>
         </div>
+
         <div class="mt-4 flex justify-between w-full">
-          <div class="flex-1">
+          <div class="flex items-center">
             <RouterLink
               :to="{ name: 'home-view', query: { page: page - 1, limit: limit } }"
               rel="prev"
@@ -207,7 +214,8 @@ function goToAddData() {
             >
               &#60; Prev Page
             </RouterLink>
-
+          </div>
+          <div class="flex items-center justify-end">
             <RouterLink
               :to="{ name: 'home-view', query: { page: page + 1, limit: limit } }"
               rel="next"
@@ -227,9 +235,10 @@ function goToAddData() {
           class="max-w-full h-auto rounded-lg opacity-80"
         />
       </div>
-      </div>
-      <div class="flex justify-center mt-4 space-x-4"> <!-- เพิ่ม space-x-4 เพื่อเว้นระยะระหว่างปุ่ม -->
-
     </div>
+    
+    <div class="flex justify-center mt-4 space-x-4"> <!-- เพิ่ม space-x-4 เพื่อเว้นระยะระหว่างปุ่ม -->
     </div>
+  </div>
 </template>
+
