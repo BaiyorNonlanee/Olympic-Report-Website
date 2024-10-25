@@ -31,6 +31,7 @@ const onSubmit = handleSubmit((values) => {
     })
     .catch(() => {
       messageStore.updateMessage('could not login')
+      console.log(messageStore.message) 
       setTimeout(() => {
         messageStore.resetMessage()
       }, 3000)
@@ -39,6 +40,16 @@ const onSubmit = handleSubmit((values) => {
 </script>
 
 <template>
+     <div class="relative">
+    <!-- ข้อความแสดงผลการแจ้งเตือนที่ด้านบนสุดของหน้าจอ -->
+    <p
+      v-if="messageStore.message"
+    
+      class="fixed top-0 left-0 w-full p-3 bg-yellow-300 text-black font-medium shadow-lg z-50 text-center"
+    >
+      {{ messageStore.message }}
+    </p>
+
   <div class="flex flex-col lg:flex-row min-h-screen">
     <!-- Left side for image -->
     <div
@@ -49,7 +60,7 @@ const onSubmit = handleSubmit((values) => {
     ></div>
 
     <!-- Right side for form -->
-    <div class="w-full lg:w-1/2 px-6 py-12 lg:px-8">
+    <div class="w-full lg:w-1/2 px-6 py-12 lg:px-8 mt-16">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
 
         <!-- Sign in header -->
@@ -59,7 +70,12 @@ const onSubmit = handleSubmit((values) => {
           Sign in to your account
         </h2>
       </div>
-
+      <!-- <p
+          v-if="messageStore.message"
+          class="bg-yellow-300 text-black font-medium py-2 px-2 shadow-lg text-center mt-4 mb-6"
+        >
+          {{ messageStore.message }}
+        </p> -->
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6 lg:space-y-12" @submit.prevent="onSubmit">
           <div>
@@ -115,4 +131,5 @@ const onSubmit = handleSubmit((values) => {
       </div>
     </div>
   </div>
+</div>
 </template>
