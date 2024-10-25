@@ -56,18 +56,18 @@ const toggleEdit = () => {
 };
 
 // Handle form submission
-const submitChanges = handleSubmit(async () => {
+const submitChanges = async () => {
   try {
     for (const sport of editedSports.value) {
       await SportService.updateSport(sport.id, sport);
     }
     emit('updateCountry', editedSports.value);
     isEditing.value = false;
-    router.push({ name: 'olympic-view' }); // Redirect to Olympic view page
+    router.push({ name: 'home-view' }); 
   } catch (error) {
     console.error('Error updating sports:', error);
   }
-});
+};
 
 // Form fields with error handling
 const { value: sportName, errorMessage: sportNameError } = useField('sportName');
