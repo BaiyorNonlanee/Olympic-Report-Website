@@ -3,8 +3,7 @@ import { ref, computed, watchEffect, watch, defineProps } from 'vue'
 import { onMounted } from 'vue'
 import InfoService from '@/services/InfoService';
 import olympicInfo from '@/components/olympicInfo.vue'
-import { type Country, User} from '@/types'
-import SvgIcon from '@jamescoyle/vue-icon'
+import { type Country,type User} from '@/types'
 import { mdiAccount } from '@mdi/js'
 import { mdiLogout } from '@mdi/js';
 import { useAuthStore } from '@/stores/auth';

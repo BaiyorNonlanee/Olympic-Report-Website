@@ -12,6 +12,8 @@ const props = defineProps<{
 }>()
 
 
+
+
 const emit = defineEmits(['updateTotals', 'updateCountry']);
 
 const isEditing = ref(false);
@@ -40,6 +42,7 @@ const toggleEdit = () => {
   isEditing.value = !isEditing.value;
 };
 
+;
 // const submitChanges = () => {
 //   emit('updateCountry', editedSports.value);
 //   isEditing.value = false; 
@@ -95,9 +98,9 @@ const submitChanges = async () => {
         <tr v-for="(sport, index) in editedSports" :key="sport.id" class="text-center odd:bg-white h-16">
           <td class="px-2 py-2">
             <div v-if="isEditing">
-              <input v-model="sport.sportName" class="border-2 border-gray-400 p-2 rounded w-full sm:w-[180px]" />
+              <input v-model="sport.id" class="border-2 border-gray-400 p-2 rounded-lg w-full sm:w-[180px]" />
             </div>
-            <div v-else>
+            <div v-else class=" text-black">
               {{ sport.sportName }}
             </div>
           </td>

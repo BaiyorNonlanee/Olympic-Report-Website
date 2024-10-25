@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Country, Sport } from '@/types'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import InfoService from '@/services/InfoService'
 import { useRouter } from 'vue-router'
 import { useMessageStore } from '@/stores/message'
@@ -36,6 +36,9 @@ const sportname = ref("")
 const sportid = ref(0)
 
 
+
+
+
 function saveCountry() {
   console.log('Saving event:', country.value) // Log the event data
    const jsonobj = 
@@ -53,6 +56,11 @@ function saveCountry() {
             }
         ]
     }
+
+    watch(() => country.value.images, (newImages) => {
+    console.log("Updated images:", newImages);
+    });
+
     console.log(jsonobj);
     
    InfoService.saveCountry(jsonobj)

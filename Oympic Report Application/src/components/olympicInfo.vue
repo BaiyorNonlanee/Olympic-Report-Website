@@ -22,7 +22,7 @@ const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBro
   onMounted(() => {
     SportService.getSports()
         .then(response => {
-            sports.value = response.data;
+            sport.value = response.data;
         })
         .catch(error => {
             console.error("Error fetching sports data:", error);
