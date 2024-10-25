@@ -1,5 +1,6 @@
 import type { Country } from '@/types'
 import apiClient from './AxiosClient'
+import type { AxiosResponse } from 'axios'
 
 export default {
   getCountries(perPage: number, page: number) {
@@ -8,8 +9,8 @@ export default {
   getCountry(id: string) {
     return apiClient.get('/countries/' + id)
   },
-  saveCountry(country: any) {
-  return apiClient.post('/addCountries', country);
+  saveCountry(country: any): Promise<AxiosResponse<Country>> {
+  return apiClient.post<Country>('/addCountries', country);
   }
     
 }

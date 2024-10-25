@@ -9,26 +9,25 @@ import BaseInput from '@/components/BaseInput.vue'
 import ImageUpload from '@/components/ImageUpload.vue'
 import BaseSelect from '@/components/icons/BaseSelect.vue'
 import { number } from 'yup'
-import { log } from 'util'
 
 const country = ref<Country>({
   id: 0,
   countryName: '',
   description: '',
-  image: [],
-  gold: 0,
-  silver: 0,
-  bronze: 0,
-  rankValue: 0,
+  // image: [],
+  // gold: 0,
+  // silver: 0,
+  // bronze: 0,
+  // rankValue: 0,
   images: [],
-  roles: [] ,
+  // roles: [] ,
   sport: {
     id: 0,
     sportName: '',
     gold_medals: 0,
     silver_medals: 0,
     bronze_medals: 0,
-    images: []
+    // images: []
   }
 })
 const router = useRouter()
@@ -43,14 +42,14 @@ function saveCountry() {
     {
         "countryName": country.value.countryName,
         "description": country.value.description,
-        "image": "",
+        "images": country.value.images,
         "ownSports": [
             {
                 "id": sportid.value,
                 "sportName": sportname.value,
-                "gold_medals": country.value.gold,
-                "silver_medals": country.value.silver,
-                "bronze_medals": country.value.bronze
+                "gold_medals": country.value.sport.gold_medals,
+                "silver_medals": country.value.sport.silver_medals,
+                "bronze_medals": country.value.sport.bronze_medals
             }
         ]
     }
@@ -88,10 +87,12 @@ const handleSportChange = (sportId: string | number) => {
   console.log('Selected Sport ID:', sportId);
   SportService.getSportById(Number(sportId))
   .then((response) => {
-      console.log("aaaaaaaa", response.data);
+      console.log("Information: ", response.data);
       sportname.value = response.data.sportName
       sportid.value = response.data.id
       //sports.value = response.data
+      console.log(response.data);
+      
     })
     .catch(() => {
       router.push({ name: 'network-error-view' })
@@ -148,7 +149,7 @@ const handleSportChange = (sportId: string | number) => {
             <label for="gold" class="block mb-5 mr-2">Gold:</label>
             <img src="@/assets/gold.png" alt="Gold Medal" class="w-6 h-10 mb-3 mr-3 ml-1" />
             <BaseInput
-              v-model="country.gold"
+              v-model="country.sport.gold_medals"
               type="text"
               id="gold"
               placeholder="Gold"
@@ -159,7 +160,7 @@ const handleSportChange = (sportId: string | number) => {
             <label for="silver" class="block mb-5 mr-2">Silver:</label>
             <img src="@/assets/silver.png" alt="Silver Medal" class="w-12 h-10 mb-3" />
             <BaseInput
-              v-model="country.silver"
+              v-model="country.sport.silver_medals"
               type="text"
               id="silver"
               placeholder="Silver"
@@ -170,7 +171,7 @@ const handleSportChange = (sportId: string | number) => {
             <label for="bronze" class="block mb-5 mr-2">Bronze:</label>
             <img src="@/assets/bronze.png" alt="Bronze Medal" class="w-12 h-10 mb-3" />
             <BaseInput
-              v-model="country.bronze"
+              v-model="country.sport.bronze_medals"
               type="text"
               id="bronze"
               placeholder="Bronze"
@@ -187,9 +188,9 @@ const handleSportChange = (sportId: string | number) => {
 
       <div>
         <h3>Upload Image:</h3>
-        <ImageUpload v-model="country.image" />
+        <ImageUpload v-model="country.images" />
       </div>
-
+      
       <button
         class="submit-button w-full py-2 text-white bg-red-600 rounded hover:bg-red-700 transition rounded-xl"
         style="margin-top: 2%"
@@ -203,10 +204,11 @@ const handleSportChange = (sportId: string | number) => {
       <h2 class="text-lg font-semibold mb-2">Preview</h2>
       <p><strong>Country Name: </strong> {{ country.countryName }}</p>
       <p><strong>Description: </strong> {{ country.description }}</p>
-      <p><strong>Gold: </strong> {{ country.gold }}</p>
-      <p><strong>Sliver</strong> {{ country.silver }}</p>
-      <p><strong>Bronze: </strong> {{ country.bronze }}</p>
+      <p><strong>Gold: </strong> {{ country.sport.gold_medals }}</p>
+      <p><strong>Sliver</strong> {{ country.sport.silver_medals }}</p>
+      <p><strong>Bronze: </strong> {{ country.sport.bronze_medals }}</p>
       <p><strong>Sport: </strong> {{ country.sport.sportName }}</p>
+      <p><strong>ImageUrl: {{ country.images }}</strong></p>
     </div>
 </template>
 

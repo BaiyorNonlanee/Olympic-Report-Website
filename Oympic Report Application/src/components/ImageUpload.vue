@@ -4,37 +4,35 @@ import { ref, withDefaults, defineProps, defineEmits, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 
 interface Props {
-  modelValue?: string[];
+    modelValue?: string[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: () => []
-});
+    modelValue: () => []
+})
 
 const convertStringToMedia = (str: string[]): any => {
-  return str.map((element: string) => {
-    return {
-      name: element
-    };
-  });
-};
+    return str.map((element: string) => {
+        return {
+            name: element
+        }
+    })
+}
 
-const emit = defineEmits(['update:modelValue']);
-
+const emit = defineEmits(['update:modelValue'])
 const convertMediaToString = (media: any): string[] => {
-  const output: string[] = [];
-  media.forEach((element: any) => {
-    output.push(element.name);
-  });
-  return output;
-};
+    const output: string[] = []
+    media.forEach ((element: any) => {
+        output.push(element.name)
+    })
+    return output
+}
 
-const media = ref(convertStringToMedia(props.modelValue));
-const uploadUrl = ref(import.meta.env.VITE_UPLOAD_URL);
-
+const media = ref(convertStringToMedia(props.modelValue))
+const uploadUrl = ref(import.meta.env.VITE_UPLOAD_URL)
 const onChanged = (files: any) => {
-  emit('update:modelValue', convertMediaToString(files));
-};
+    emit('update:modelValue', convertMediaToString(files))
+}
  
 // Initialize the auth store
 const authStore = useAuthStore();
@@ -46,3 +44,4 @@ const authorizeHeader = computed(() => {
 <template>
   <Uploader :server="uploadUrl" @change="onChanged" :media="media" :headers="authorizeHeader"></Uploader>
 </template>
+
