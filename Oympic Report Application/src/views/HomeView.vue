@@ -4,16 +4,16 @@ import { onMounted } from 'vue'
 import InfoService from '@/services/InfoService';
 import olympicInfo from '@/components/olympicInfo.vue'
 import { type Country } from '@/types'
-import SvgIcon from '@jamescoyle/vue-icon'
-import { mdiAccount } from '@mdi/js'
-import { mdiLogout } from '@mdi/js';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 
-const countries = ref<Country[] | null>(null)
+const countries = ref<Country[]>([]);
+// ref<Country[] | null>(null)
 const totalCountry = ref(0)
 const authStore = useAuthStore()
 const router = useRouter()
+const allCountries = ref<Country[]>([]);
+
 
 const props = defineProps({
   page: {
@@ -30,9 +30,6 @@ const userLimit = ref<number>(props.limit);
 const limit = computed(() => userLimit.value || props.limit);
 const page = computed(() => props.page);
 
-function goToAddData() {
-  router.push({ name: 'add-data' }); 
-}
 
 const hasNextPage = computed(() => {
   const totalPage = Math.ceil(totalCountry.value / limit.value);
@@ -45,11 +42,27 @@ watchEffect(() => {
     .then((response) => {
       countries.value = response.data;
       totalCountry.value = parseInt(response.headers['x-total-count']);
-    })
+      console.log('Before sorting:', countries.value);
+      countries.value.forEach(country => {
+  console.log(`Country: ${country.countryName}, Gold: ${country.gold}`);
+});
+calculateAndSortCountries();
+console.log('After sorting:', countries.value);
+
+     })
     .catch((error) => {
       console.error('Error fetching data:', error)
     })
 })
+const calculateAndSortCountries = () => {
+  allCountries.value.forEach(country => {
+    console.log(`Country: ${country.countryName}, Gold: ${country.gold}`); // ตรวจสอบค่าที่เป็น gold
+  });
+
+  // จัดเรียงประเทศตามจำนวนเหรียญทอง
+  allCountries.value.sort((a, b) => b.gold - a.gold);
+};
+
 
 const token = localStorage.getItem('token')
 const user = localStorage.getItem('user')
