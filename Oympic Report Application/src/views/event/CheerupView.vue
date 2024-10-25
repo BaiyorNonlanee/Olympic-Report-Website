@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useCommentsStore } from '@/stores/comment'
+import { useCommentsStore, defineProps } from '@/stores/comment'
+import { useAuthStore } from '@/stores/auth'
 import type { Country } from '@/types'
 import type { PropType } from 'vue'
 
@@ -12,11 +13,13 @@ const props = defineProps({
 })
 
 const commentsStore = useCommentsStore()
+const authStore = useAuthStore()
 const newComment = ref('')
 
 const addComment = () => {
   if (newComment.value.trim()) {
-    commentsStore.addComment(props.country.countryName, newComment.value)
+    const username = authStore.currentUserName 
+    commentsStore.addComment(props.country.countryName, newComment.value, username)
     newComment.value = ''
   }
 }
@@ -42,6 +45,7 @@ const addComment = () => {
         :key="comment.id"
         class="bg-customBrown2 border-2 border-customBrown1 rounded-lg p-4 my-1.5 text-lg text-left"
       >
+      <strong>{{ comment.username }}:</strong>
         {{ comment.text }}
       </div>
     </div>

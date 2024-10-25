@@ -39,10 +39,27 @@ const hasNextPage = computed(() => {
   return page.value < totalPage;
 });
 
+const fetchCountries = async () => {
+  try {
+    const response = await InfoService.getCountries(limit.value, page.value);
+    countries.value = response.data;
+    totalCountry.value = parseInt(response.headers['x-total-count']);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+// Watch the page prop for changes and fetch countries
+watch(() => props.page, fetchCountries, { immediate: true });
+
+// Initial fetch when component mounts
+onMounted(fetchCountries);
+
 // Fetch countries
 watchEffect(() => {
   InfoService.getCountries(limit.value, page.value)
     .then((response) => {
+      countries.value = []
       countries.value = response.data;
       totalCountry.value = parseInt(response.headers['x-total-count']);
     })
@@ -100,11 +117,6 @@ function goToAddData() {
             </div>
           </router-link>
         </li>
-        <li>
-          <span v-if="authStore.isAdmin">
-        <RouterLink to="/list-user">List Of Users</RouterLink>
-       </span>
-        </li>
       </ul>
       <ul v-if="authStore.currentUserName" class="flex navbar-nav ml-auto  text-white">
         <li class="nav-item px-2">
@@ -121,8 +133,16 @@ function goToAddData() {
             </div>
           </a>
         </li>
+        <li>
+          <span v-if="authStore.isMasterAdmin || authStore.isAdmin">
+        <RouterLink to="/list-user">List Of Users</RouterLink>
+       </span>
+        </li>
       </ul>
     </nav>
+    <!-- <span v-if="authStore.isAdmin">
+        <RouterLink to="/list-user">List Of Users</RouterLink>
+       </span> -->
     <div class="flex flex-col md:flex-row">
       <div class="w-full md:w-6/12 p-4 order-2 md:order-1">
         <p class="text-blue-900 text-3xl md:text-5xl mt-8 ml-5 text-center md:text-left">THE BEST OF PARIS <br />2024 OLYMPIC GAMES</p>
@@ -149,7 +169,7 @@ function goToAddData() {
             />
           </form>
         </div>
-        <span v-if="authStore.isAdmin">
+        <span v-if="authStore.isMasterAdmin || authStore.isAdmin">
         <RouterLink to="/add-data">Add New Country</RouterLink>
        </span>
         

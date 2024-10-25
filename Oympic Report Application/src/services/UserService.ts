@@ -10,6 +10,19 @@ export default {
   },
   getUser(){
     return apiClient.get('/users')
+  },
+  getRoleUser(){
+    return apiClient.get('/roles')
+  },
+  editUserRole(id:number, userId:number, role:string) {
+    return apiClient.put('/api/v1/auth/edit-role', {  
+      id: id,
+      userid: userId,
+      role: role
+    });
+  },
+  getRoleUserById(id: string) {
+    return apiClient.get(`/roles/${id}`);
   }
     
 }

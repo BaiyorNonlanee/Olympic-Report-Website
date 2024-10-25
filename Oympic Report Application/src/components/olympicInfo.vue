@@ -15,14 +15,18 @@ const totalSilver = ref(0);
 const totalBronze = ref(0);
 
 const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBronze: number }) => {
-  totalGold.value = totals.totalGold;
-  totalSilver.value = totals.totalSilver;
-  totalBronze.value = totals.totalBronze;
+  totalGold.value = totals.totalGold?totals.totalGold:0;
+  totalSilver.value = totals.totalSilver?totals.totalSilver:0;
+  totalBronze.value = totals.totalBronze?totals.totalBronze:0 ;
+
+  console.log("aaaaaaaaa", totals);
+  
+
 
   onMounted(() => {
     SportService.getSports()
         .then(response => {
-            sports.value = response.data;
+            //sports.value = response.data;
         })
         .catch(error => {
             console.error("Error fetching sports data:", error);
