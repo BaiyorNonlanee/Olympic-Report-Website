@@ -7,7 +7,7 @@ import { useMessageStore } from '@/stores/message'
 import SportService from '@/services/SportService'
 import BaseInput from '@/components/BaseInput.vue'
 import ImageUpload from '@/components/ImageUpload.vue'
-import BaseSelect from '@/components/icons/BaseSelect.vue'
+import BaseSelect from '@/components/BaseSelect.vue'
 import { number } from 'yup'
 
 const country = ref<Country>({
@@ -100,16 +100,8 @@ const handleSportChange = (sportId: string | number) => {
 </script>
 
 <template>
-  <!-- <nav class="navbar bg-black p-4 flex items-center justify-center">
-    <img
-      src="@/assets/logo-2.png"
-      alt="Logo"
-      class="w-[120px] h-[120px] md:w-[150px] md:h-[150px]"
-    />
-  </nav> -->
-
   <h1 class="text-center text-3xl font-bold mb-4" style="margin-top: 3%; color: #0d3b66">
-    Update Information
+    Add Information
   </h1>
 
   <div class="container mx-auto p-4" style="background-color: beige">
@@ -181,7 +173,7 @@ const handleSportChange = (sportId: string | number) => {
 
       <div class="form-group mb-4 flex items-center">
         <label for="sport" class="block mb-5 w-1/3">Sport:</label>
-        <BaseSelect v-model="country.sport.id" :options="sports" label="Sport" @onChange="handleSportChange"/>
+        <BaseSelect v-model="country.sport.id" :options="sports" @onChange="handleSportChange" class="w-min h-10 text-lg border border-gray-300 rounded-lg"/>
       </div>
 
       <div>
