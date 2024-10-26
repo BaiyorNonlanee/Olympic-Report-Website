@@ -3,16 +3,17 @@ import { ref, computed, watchEffect, watch, defineProps } from 'vue'
 import { onMounted } from 'vue'
 import InfoService from '@/services/InfoService';
 import olympicInfo from '@/components/olympicInfo.vue'
-import { type Country,type User} from '@/types'
-import { mdiAccount } from '@mdi/js'
-import { mdiLogout } from '@mdi/js';
+import { type Country } from '@/types'
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 
-const countries = ref<Country[] | null>(null)
+const countries = ref<Country[]>([]);
+// ref<Country[] | null>(null)
 const totalCountry = ref(0)
 const authStore = useAuthStore()
 const router = useRouter()
+const allCountries = ref<Country[]>([]);
+
 
 const props = defineProps({
   page: {
@@ -29,26 +30,56 @@ const userLimit = ref<number>(props.limit);
 const limit = computed(() => userLimit.value || props.limit);
 const page = computed(() => props.page);
 
-// function goToAddData() {
-//   router.push({ name: 'add-data' }); 
-// }
 
 const hasNextPage = computed(() => {
   const totalPage = Math.ceil(totalCountry.value / limit.value);
   return page.value < totalPage;
 });
 
+const fetchCountries = async () => {
+  try {
+    const response = await InfoService.getCountries(limit.value, page.value);
+    countries.value = response.data;
+    totalCountry.value = parseInt(response.headers['x-total-count']);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+// Watch the page prop for changes and fetch countries
+watch(() => props.page, fetchCountries, { immediate: true });
+
+// Initial fetch when component mounts
+onMounted(fetchCountries);
+
 // Fetch countries
 watchEffect(() => {
   InfoService.getCountries(limit.value, page.value)
     .then((response) => {
+      countries.value = []
       countries.value = response.data;
       totalCountry.value = parseInt(response.headers['x-total-count']);
-    })
+      console.log('Before sorting:', countries.value);
+      countries.value.forEach(country => {
+  console.log(`Country: ${country.countryName}, Gold: ${country.gold}`);
+});
+calculateAndSortCountries();
+console.log('After sorting:', countries.value);
+
+     })
     .catch((error) => {
       console.error('Error fetching data:', error)
     })
 })
+const calculateAndSortCountries = () => {
+  allCountries.value.forEach(country => {
+    console.log(`Country: ${country.countryName}, Gold: ${country.gold}`); // ตรวจสอบค่าที่เป็น gold
+  });
+
+  // จัดเรียงประเทศตามจำนวนเหรียญทอง
+  allCountries.value.sort((a, b) => b.gold - a.gold);
+};
+
 
 const token = localStorage.getItem('token')
 const user = localStorage.getItem('user')
@@ -67,9 +98,6 @@ function logout() {
 function goToAddData() {
   router.push({ name: 'add-data' }); // เปลี่ยน 'add-data' ให้ตรงกับชื่อเส้นทางที่ใช้สำหรับหน้า add data
 }
-// function goToAddData() {
-//   router.push({ name: 'add-data' }); 
-// }
 </script>
 
 <template>
@@ -102,11 +130,6 @@ function goToAddData() {
             </div>
           </router-link>
         </li>
-        <li>
-          <span v-if="authStore.isAdmin">
-        <RouterLink to="/list-user">List Of Users</RouterLink>
-       </span>
-        </li>
       </ul>
       <ul v-if="authStore.currentUserName" class="flex navbar-nav ml-auto  text-white">
         <li class="nav-item px-2">
@@ -123,8 +146,16 @@ function goToAddData() {
             </div>
           </a>
         </li>
+        <li>
+          <span v-if="authStore.isMasterAdmin || authStore.isAdmin">
+        <RouterLink to="/list-user">List Of Users</RouterLink>
+       </span>
+        </li>
       </ul>
     </nav>
+    <!-- <span v-if="authStore.isAdmin">
+        <RouterLink to="/list-user">List Of Users</RouterLink>
+       </span> -->
     <div class="flex flex-col md:flex-row">
       <div class="w-full md:w-6/12 p-4 order-2 md:order-1">
         <p class="text-blue-900 text-3xl md:text-5xl mt-8 ml-5 text-center md:text-left">THE BEST OF PARIS <br />2024 OLYMPIC GAMES</p>
@@ -151,7 +182,7 @@ function goToAddData() {
             />
           </form>
         </div>
-        <span v-if="authStore.isAdmin">
+        <span v-if="authStore.isMasterAdmin || authStore.isAdmin">
         <RouterLink to="/add-data">Add New Country</RouterLink>
        </span>
         

@@ -9,6 +9,7 @@ const emit = defineEmits(['update:modelValue', 'onChange']);
 interface BaseSelectProps {
   label: string;
   options: Sport[];
+
 }
 
 // Default props

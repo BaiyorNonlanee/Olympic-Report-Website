@@ -2,12 +2,12 @@ export interface Country{
     id: number,
     countryName: string,
     description: string,
-    // image: string[],
-    // gold: number,
-    // silver: number,
-    // bronze: number,
-    // rankValue: number,
-    // roles: string[] | null,
+    image: string[],
+    gold: number,
+    silver: number,
+    bronze: number,
+    rankValue: number,
+    roles: string[] | null,
     images: string[],
     sport: Sport
 }
@@ -18,7 +18,7 @@ export interface Sport {
   gold_medals: number;
   silver_medals: number;
   bronze_medals: number;
-  // images: string[]
+  images: string[]
 }
 
 export interface InfoState {
@@ -35,7 +35,13 @@ export interface User {
   lastname: string;
   username: string;
   email: string;
-  images: string[],
-  roles: string[] | null;
+  role: Role;
+  
 }
+export interface Role {
+  id: number;
+  roles: string;
+}
+
+
 

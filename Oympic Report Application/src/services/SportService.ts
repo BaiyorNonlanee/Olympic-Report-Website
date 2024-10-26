@@ -15,4 +15,5 @@ export default {
     updateSport(id: number, sport: Sport): Promise<AxiosResponse<Sport>> {
         return apiClient.put<Sport>(`/sports/${id}`, sport);  
       }
+      
 }

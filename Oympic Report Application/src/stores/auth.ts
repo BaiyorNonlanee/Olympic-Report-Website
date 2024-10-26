@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import type { Country, User } from '@/types'
+import router from '@/router'
 const apiClient: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
   withCredentials: false,
@@ -17,13 +18,19 @@ export const useAuthStore = defineStore('auth', {
   }),
   getters: {
     currentUserName(): string {
-      return this.user?.firstname || ''  
+      return this.user?.username || ''  
+    },
+    currentId(): number {
+      return this.user?.id || 0 
     },
     isAdmin(): boolean {
       return this.user?.roles.includes('ROLE_ADMIN') || false
     },
     authorizationHeader(): string {
       return `Bearer ${this.token}`
+    },
+    isMasterAdmin(): boolean {
+      return this.user?.roles.includes('ROLE_MASTERADMIN') || false
     }
   },
   actions: {
@@ -34,14 +41,17 @@ export const useAuthStore = defineStore('auth', {
           password: password
         })
         .then((response) => {
-          this.token = response.data.access_token
-          this.user = response.data.user
-          localStorage.setItem('token', this.token as string)
-          localStorage.setItem('user', JSON.stringify(this.user))
-          axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-          return response
-        })
-    },
+          console.log('Login response:', response.data); // Log the response
+          this.token = response.data.access_token;
+          this.user = response.data.user; // Ensure user object contains roles
+          console.log('User roles:', this.user.roles); // Log user roles
+          localStorage.setItem('token', this.token as string);
+          localStorage.setItem('user', JSON.stringify(this.user));
+          axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+          return response;
+        });
+    }
+    ,
     register(
       firstname: string,
       lastname: string,
@@ -62,7 +72,7 @@ export const useAuthStore = defineStore('auth', {
           this.user = response.data.user
           localStorage.setItem('access_token', this.token as string)
           localStorage.setItem('user', JSON.stringify(this.user))
-          axios.defaults.headers.common['Authorization'] = 'Bearer ${this.token}'
+          axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
           return response
         })
     },
