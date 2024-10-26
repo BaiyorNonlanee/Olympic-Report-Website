@@ -34,19 +34,37 @@ const hasNextPage = computed(() => {
   return page.value < totalPage
 })
 
+const fetchCountries = async () => {
+  try {
+    const response = await InfoService.getCountries(limit.value, page.value);
+    countries.value = response.data;
+    totalCountry.value = parseInt(response.headers['x-total-count']);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+// Watch the page prop for changes and fetch countries
+watch(() => props.page, fetchCountries, { immediate: true });
+
+// Initial fetch when component mounts
+onMounted(fetchCountries);
+
 // Fetch countries
 watchEffect(() => {
   InfoService.getCountries(limit.value, page.value)
     .then((response) => {
-      countries.value = response.data
-      totalCountry.value = parseInt(response.headers['x-total-count'])
-      console.log('Before sorting:', countries.value)
-      countries.value.forEach((country) => {
-        console.log(`Country: ${country.countryName}, Gold: ${country.gold}`)
-      })
-      calculateAndSortCountries()
-      console.log('After sorting:', countries.value)
-    })
+      countries.value = []
+      countries.value = response.data;
+      totalCountry.value = parseInt(response.headers['x-total-count']);
+      console.log('Before sorting:', countries.value);
+      countries.value.forEach(country => {
+  console.log(`Country: ${country.countryName}, Gold: ${country.gold}`);
+});
+calculateAndSortCountries();
+console.log('After sorting:', countries.value);
+
+     })
     .catch((error) => {
       console.error('Error fetching data:', error)
     })
@@ -108,11 +126,6 @@ function goToAddData() {
             </div>
           </router-link>
         </li>
-        <li>
-          <span v-if="authStore.isAdmin">
-            <RouterLink to="/list-user">List Of Users</RouterLink>
-          </span>
-        </li>
       </ul>
       <ul v-if="authStore.currentUserName" class="flex navbar-nav ml-auto text-white">
         <li class="nav-item px-2">
@@ -129,9 +142,16 @@ function goToAddData() {
             </div>
           </a>
         </li>
+        <li>
+          <span v-if="authStore.isMasterAdmin || authStore.isAdmin">
+        <RouterLink to="/list-user">List Of Users</RouterLink>
+       </span>
+        </li>
       </ul>
     </nav>
-
+    <!-- <span v-if="authStore.isAdmin">
+        <RouterLink to="/list-user">List Of Users</RouterLink>
+       </span> -->
     <div class="flex flex-col md:flex-row">
       <div class="w-full md:w-6/12 p-4 order-2 md:order-1">
         <p class="text-blue-900 text-3xl md:text-5xl mt-8 ml-5 text-center md:text-left">
@@ -169,7 +189,10 @@ function goToAddData() {
             </RouterLink>
           </span>
         </div>
-
+        <span v-if="authStore.isMasterAdmin || authStore.isAdmin">
+        <RouterLink to="/add-data">Add New Country</RouterLink>
+       </span>
+        
         <div class="block md:flex justify-start w-full overflow-x-auto mt-4">
           <table
             class="w-full max-w-screen-lg border-collapse bg-customBlue rounded-[30px] overflow-hidden"
