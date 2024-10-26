@@ -53,12 +53,7 @@ export const useAuthStore = defineStore('auth', {
     }
     ,
     register(
-      firstname: string,
-      lastname: string,
-      username: string,
-      email: string,
-      password: string
-    ) {
+firstname: string, lastname: string, username: string, email: string, password: string, images: never[]    ) {
       return apiClient
         .post('/api/v1/auth/register', {
           firstname: firstname,

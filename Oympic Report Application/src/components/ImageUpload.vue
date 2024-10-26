@@ -2,6 +2,7 @@
 import Uploader from 'vue-media-upload'
 import { ref, withDefaults, defineProps, defineEmits, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+// import { log } from 'console';
 
 interface Props {
     modelValue?: string[]
@@ -32,8 +33,9 @@ const media = ref(convertStringToMedia(props.modelValue))
 const uploadUrl = ref(import.meta.env.VITE_UPLOAD_URL)
 const onChanged = (files: any) => {
     emit('update:modelValue', convertMediaToString(files))
+    console.log(files);
+    
 }
- 
 // Initialize the auth store
 const authStore = useAuthStore();
 const authorizeHeader = computed(() => {
@@ -43,5 +45,4 @@ const authorizeHeader = computed(() => {
 
 <template>
   <Uploader :server="uploadUrl" @change="onChanged" :media="media" :headers="authorizeHeader"></Uploader>
-</template>
-
+</template> 

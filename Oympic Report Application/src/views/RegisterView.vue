@@ -60,7 +60,8 @@ const handleImageUpload = (uploadedImage: File) => {
 <template>
   <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 1g:px-8">
     <div class="text-center">
-      <p>Register here</p>
+      <h1 class="text-2xl font-bold mb-4">Register here</h1>
+      <!-- <p>Register here</p> -->
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6" @submit.prevent="onSubmit">
           <div>
@@ -90,7 +91,7 @@ const handleImageUpload = (uploadedImage: File) => {
             <ImageUpload @upload="handleImageUpload" />
           </div>
           <div>
-            <button type="submit" class="bg-blue-500 text-white p-2 rounded">Register Me!</button>
+            <button type="submit" class="w-30% py-2 px-2 text-white bg-red-600 rounded hover:bg-red-700 transition rounded-xl">Register Me!</button>
           </div>
         </form>
       </div>

@@ -9,6 +9,7 @@ const props = defineProps<{
   country: Country;
 }>();
 
+
 const totalGold = ref(0);
 const totalSilver = ref(0);
 const totalBronze = ref(0);
@@ -18,18 +19,17 @@ const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBro
   totalGold.value = totals.totalGold;
   totalSilver.value = totals.totalSilver;
   totalBronze.value = totals.totalBronze;
-};
 
   onMounted(() => {
     SportService.getSports()
         .then(response => {
-            //sports.value = response.data;
+            sport.value = response.data;
         })
         .catch(error => {
             console.error("Error fetching sports data:", error);
         });
 });
-
+};
 
 </script>
 
@@ -47,4 +47,3 @@ const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBro
   <td>{{ totalSilver }}</td>
   <td>{{ totalBronze }}</td>
 </template>
-
