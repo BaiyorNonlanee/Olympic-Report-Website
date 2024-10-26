@@ -39,7 +39,7 @@ const { value: password } = useField<string>('password');
 const { value: images } = useField<File | null>('image');  // Add image field
 
 const onSubmit = handleSubmit((values) => {
-  authStore.register(values.firstname, values.lastname, values.username, values.email, values.password, values.image)
+  authStore.register(values.firstname, values.lastname, values.username, values.email, values.password, values.images)
     .then(() => {
       router.push({ name: 'home-view' });
     }).catch(() => {
@@ -87,7 +87,7 @@ const handleImageUpload = (uploadedImage: File) => {
           </div>
           <div>
             <h3>Upload Image:</h3>
-            <ImageUpload @upload="handleImageUpload" /> <!-- Bind the upload event to handler -->
+            <ImageUpload @upload="handleImageUpload" />
           </div>
           <div>
             <button type="submit" class="bg-blue-500 text-white p-2 rounded">Register Me!</button>
