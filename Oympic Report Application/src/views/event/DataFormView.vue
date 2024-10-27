@@ -122,10 +122,18 @@ const onSubmit = handleSubmit((values) => {
 </script>
 
 <template>
+  
   <h1 class="text-center text-3xl font-bold mb-4" style="margin-top: 3%; color: #0d3b66">
     ADD NEW COUNTRY
   </h1>
-
+  <div class="relative">
+    <p
+      v-if="store.message"
+    
+      class="fixed top-0 left-0 w-full p-3 bg-green-500 text-black font-medium shadow-lg z-50 text-center"
+    >
+      {{ store.message }}
+    </p>
   <div class="container mx-auto p-4 rounded-xl" style="background-color: beige">
     <form @submit.prevent="onSubmit" class="w-full h-auto p-6 relative rounded-xl">
       <div class="form-group mb-4 flex items-center">
@@ -216,6 +224,7 @@ const onSubmit = handleSubmit((values) => {
       </button>
     </form>
   </div>
+</div>
 </template>
 
 <style scoped></style>

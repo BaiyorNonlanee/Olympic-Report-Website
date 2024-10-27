@@ -185,8 +185,8 @@ const rankedCountries = computed(() => {
     <!-- <span v-if="authStore.isAdmin">
         <RouterLink to="/list-user">List Of Users</RouterLink>
        </span> -->
-    <div class="flex flex-col md:flex-row">
-      <div class="w-full md:w-6/12 p-4 order-2 md:order-1">
+    <div class="flex flex-col md:flex-col lg:flex-row">
+      <div class="w-full lg:w-6/12 p-4 md:order-1 center-content">
         <p class="text-blue-900 text-3xl md:text-5xl mt-8 ml-5 text-center md:text-left">
           THE BEST OF PARIS <br />2024 OLYMPIC GAMES
         </p>
@@ -283,17 +283,15 @@ const rankedCountries = computed(() => {
         </div>
       </div>
       <!-- Right Column (Image) -->
-      <div class="w-full md:w-6/12 flex items-center justify-center p-4 order-2 md:order-2">
+      <div class="w-full md:w-6/12 flex items-center justify-center p-4 order-2 md:order-2 center-content">
         <img
           src="@/assets/PeoSummerOlympics_2024.jpg"
           alt="Badminton"
-          class="max-w-full h-auto rounded-lg opacity-80"
+          class="max-w-full h-auto rounded-lg opacity-80 "
         />
       </div>
     </div>
-
     <div class="flex justify-center mt-4 space-x-4">
-      <!-- เพิ่ม space-x-4 เพื่อเว้นระยะระหว่างปุ่ม -->
     </div>
     </div>
 </template>
