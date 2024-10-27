@@ -43,6 +43,8 @@ const fetchCountries = async () => {
     const response = await InfoService.getCountries(limit.value, page.value);
     countries.value = response.data;
     totalCountry.value = parseInt(response.headers['x-total-count']);
+        calculateAndSortCountries();
+
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -108,10 +110,25 @@ const rankedCountries = computed(() => {
   return countries.value
     .map(country => ({
       ...country,
-      totalGold: medalData.value.get(country.id)?.totalGold || 0
+      totalGold: medalData.value.get(country.id)?.totalGold || 0,
+      totalSilver: medalData.value.get(country.id)?.totalSilver || 0,
+      totalBronze: medalData.value.get(country.id)?.totalBronze || 0,
     }))
-    .sort((a, b) => b.totalGold - a.totalGold);
+    .sort((a, b) => {
+      // เรียงตามเหรียญทอง
+      if (b.totalGold !== a.totalGold) {
+        return b.totalGold - a.totalGold;
+      }
+      // ถ้าเหรียญทองเท่ากัน เรียงตามเหรียญเงิน
+      if (b.totalSilver !== a.totalSilver) {
+        return b.totalSilver - a.totalSilver;
+      }
+      // ถ้าเหรียญเงินเท่ากัน เรียงตามเหรียญทองแดง
+      return b.totalBronze - a.totalBronze;
+    });
 });
+
+
 </script>
 
 <template>
