@@ -12,6 +12,7 @@
 //     sport: Sport
 // }
 export interface Country{
+  ownSports: any;
   id: number,
   countryName: string,
   description: string,

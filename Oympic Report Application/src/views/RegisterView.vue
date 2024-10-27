@@ -12,6 +12,7 @@ import logo from '@/assets/Logo.png';
 import axios from 'axios';
 import type { RegisterUser } from '@/types';
 
+
 const registeruser = ref<RegisterUser> ({
   firstname: '',
   lastname: '',
@@ -29,6 +30,9 @@ const store = useMessageStore();
 // const profilePicture = ref<File | null>(null);
 
 const validationSchema = yup.object({
+  firstname: yup.string().required('Firstname is required'),
+  lastname: yup.string().required('Lastname is required'),
+  username: yup.string().required('Username is required'),
   email: yup.string().required('The email is required'),
   password: yup.string().required('The password is required')
 });
@@ -74,7 +78,7 @@ const onSubmit = handleSubmit((values) => {
       <img :src="logo" alt="Logo" class="absolute top-0 left-0 w-20 h-20"/>
     </div>
     <div class="min-h-full justify-center px-6 py-12">
-      <h1 class="text-2xl font-bold text-center mb-6">Register here</h1>
+      <h1 class="text-2xl font-bold text-center mb-6">Register Here</h1>
       <div class="w-full max-w-4xl flex">
         <!-- Left side: Form fields -->
         <div class="w-3/4 p-4 ml-4"> <!-- Added ml-4 for margin-left -->
@@ -116,8 +120,6 @@ const onSubmit = handleSubmit((values) => {
         <div class="w-1/4 p-4 border-l border-gray-300 ml-15">
           <h3 class="text-xl font-bold mb-4">Upload Image:</h3>
           <ImageUpload v-model="images" />
-          <div class="mt-6 p-4 bg-gray-100 rounded-lg border border-gray-300 shadow-md">
-          </div>
         </div>
       </div>
     </div>
