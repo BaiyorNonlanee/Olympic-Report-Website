@@ -3,7 +3,7 @@ import { ref, onMounted, computed, watch } from 'vue'
 import UserService from '@/services/UserService'
 import BaseSelectRole from '@/components/BaseSelectRole.vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Role, User } from '../types'
+import type { Role, User } from '../types'
 import { useMessageStore } from '@/stores/message'
 
 const users = ref<User[] | null>(null)
@@ -32,10 +32,10 @@ const fetchData = async (page: number, limit: number) => {
     totalPages.value = Math.ceil(totalCount / limit)
     roleOptions.value = rolesResponse.data
       .filter((role: string) => role !== 'ROLE_MASTERADMIN')
-      .map((role, index) => ({ id: index + 1, roles: role }))
+      .map((role: any, index: number) => ({ id: index + 1, roles: role }))
     users.value = userResponse.data
-      .filter((user) => !user.roles.includes('ROLE_MASTERADMIN'))
-      .map((user) => {
+      .filter((user: { roles: string | string[] }) => !user.roles.includes('ROLE_MASTERADMIN'))
+      .map((user: { roles: string | any[] }) => {
         const currentRoleId =
           user.roles.length > 0
             ? roleOptions.value.find((roleOption) => roleOption.roles === user.roles[0])?.id
@@ -75,9 +75,9 @@ function prevPage() {
 }
 
 const updateSelectedRole = async (userId: number, selectedRole: number) => {
-  const user = users.value.find((user) => user.id === userId)
+  const user = users.value?.find((user) => user.id === userId)
   if (user) {
-    user.selectedRole = selectedRole
+    user.role.id = selectedRole
     try {
       await submitChanges()
       messageStore.updateMessage('Role change successful, please log in again.')

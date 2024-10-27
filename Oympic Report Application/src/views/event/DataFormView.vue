@@ -7,8 +7,10 @@ import { useMessageStore } from '@/stores/message'
 import SportService from '@/services/SportService'
 import BaseInput from '@/components/BaseInput.vue'
 import ImageUpload from '@/components/ImageUpload.vue'
-import BaseSelect from '@/components/icons/BaseSelect.vue'
+import BaseSelect from '@/components/BaseSelect.vue'
 import { number } from 'yup'
+import { useForm, useField } from 'vee-validate';
+import * as yup from 'yup';
 
 const country = ref<Country>({
   id: 0,
@@ -29,6 +31,7 @@ const country = ref<Country>({
     bronze_medals: 0,
     // images: []
   },
+  ownSports: undefined
 })
 const router = useRouter()
 const store = useMessageStore()
@@ -107,6 +110,32 @@ const handleSportChange = (sportId: string | number) => {
 const goBack = () => {
   router.push({ name: 'home-view' }); // Adjust the route name if needed
 };
+const schema = yup.object({
+  countryName: yup.string().required('Country name is required'),
+  description: yup.string(),
+  gold: yup.number().min(0, 'Gold must be a positive number').nullable(),
+  silver: yup.number().min(0, 'Silver must be a positive number').nullable(),
+  bronze: yup.number().min(0, 'Bronze must be a positive number').nullable(),
+  sport: yup.object({
+    id: yup.number().min(1, 'Please select a sport').nullable()
+  })
+});
+const { handleSubmit, errors } = useForm({ validationSchema: schema });
+ 
+const { value: countryName, errorMessage: countryNameError } = useField<string>('countryName');
+const { value: description } = useField<string>('description');
+const { value: gold, errorMessage: goldError } = useField<number | null>('gold');
+const { value: silver, errorMessage: silverError } = useField<number | null>('silver');
+const { value: bronze, errorMessage: bronzeError } = useField<number | null>('bronze');
+const { value: sport } = useField('sport.id');
+ 
+watch(countryName, (newValue) => {
+  country.value.countryName = newValue ;
+});
+ 
+const onSubmit = handleSubmit((values) => {
+  saveCountry();
+});
 </script>
 
 <template>
@@ -128,7 +157,7 @@ const goBack = () => {
   </h1>
 
   <div class="container mx-auto p-4">
-    <form @submit.prevent="saveCountry" class="w-full h-auto p-6 relative rounded-xl p-2">
+    <form @submit.prevent="onSubmit" class="w-full h-auto p-6 relative rounded-xl p-2">
       <!-- ลบ class rounded ที่ซ้ำ -->
 
       <div class="form-group mb-4 flex items-center">
@@ -141,6 +170,7 @@ const goBack = () => {
           class="w-1/3 border border-gray-300 rounded p-2 resize rounded-xl"
           style="min-height: 40px; resize: vertical"
         />
+        <span class="text-red-600 ">{{ countryNameError }}</span>
       </div>
 
       <div class="form-group mb-4 flex items-center">
