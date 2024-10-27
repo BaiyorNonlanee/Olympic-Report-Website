@@ -68,71 +68,57 @@ const onSubmit = handleSubmit((values) => {
 //     console.log("Updated images:", newImages);
 //     });
 </script>
-
 <template>
   <div class="relative bg-gradient-to-r from-white via-blue-400 via-purple-200 to-pink-300 min-h-screen">
     <div class="relative">
       <img :src="logo" alt="Logo" class="absolute top-0 left-0 w-20 h-20"/>
     </div>
-    <div class="flex min-h-full justify-center px-6 py-12 lg:px-8">
-      <div class="flex w-full max-w-4xl">
-        <!-- Section for Image Upload (1/3) -->
-        <!-- Section for Form (2/3) -->
-        <div>
-          <div class="text-center">
-            <h1 class="text-2xl font-bold">Register here</h1>
-            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-              <form class="space-y-2 back" @submit.prevent="onSubmit">
-                <div class="w-full pr-6">
-                  <h3 class="text-xl font-bold-500 mb-4 mt-20">Upload Image:</h3>
-                  <ImageUpload v-model="images" />
-                  <div class="mt-6 p-4 bg-white rounded-lg border border-gray-300 shadow-md">
-                    <h2 class="text-lg font-semibold mb-2">Preview</h2>
-                    <p><strong>ImageUrl: {{ images }}</strong></p>
-                  </div>
-                </div>
-                <div>
-                  <div class="flex items-center justify-between">
-                    <label for="firstname" class="block text-sm font-medium leading-6 text-gray-900">Firstname</label>
-                  </div>
-                  <InputText type="text" v-model="firstname" placeholder="Firstname" 
-                  :error="errors['firstname']" class="w-full p-2 text-base"/>
-                </div>
-                <div>
-                  <div class="flex items-center justify-between">
-                    <label for="lastname" class="block text-sm font-medium leading-6 text-gray-900">Lastname</label>
-                  </div>
-                  <InputText type="text" v-model="lastname" placeholder="Lastname" 
-                  :error="errors['lastname']" class="w-full p-2 text-base"/>
-                </div>
-                <div>
-                  <div class="flex items-center justify-between">
-                    <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
-                  </div>
-                  <InputText type="text" v-model="username" placeholder="Username" 
-                  :error="errors['username']" class="w-full p-2 text-base"/>
-                </div>
-                <div>
-                  <div class="flex items-center justify-between">
-                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
-                  </div>
-                  <InputText type="text" v-model="email" placeholder="Email address" 
-                  :error="errors['email']" class="w-full p-2 text-base"/>
-                </div>
-                <div>
-                  <div class="flex items-center justify-between">
-                    <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
-                  </div>
-                  <InputText type="password" v-model="password" placeholder="Password" 
-                  :error="errors['password']" class="w-full p-2 text-base"/>
-                </div>
-                <div>
-                  <button type="submit" class="w-full py-2 px-4 text-white bg-red-600 hover:bg-red-700 transition rounded-xl">
-                    Register Me!
-                  </button>
-                </div>
-              </form>
+    <div class="min-h-full justify-center px-6 py-12">
+      <h1 class="text-2xl font-bold text-center mb-6">Register here</h1>
+      <div class="w-full max-w-4xl flex">
+        <!-- Left side: Form fields -->
+        <div class="w-3/4 p-4 ml-4"> <!-- Added ml-4 for margin-left -->
+          <form class="space-y-4" @submit.prevent="onSubmit">
+            <div>
+              <label for="firstname" class="block text-sm font-medium leading-6 text-gray-900">Firstname</label>
+              <InputText type="text" v-model="firstname" placeholder="Firstname" 
+                :error="errors['firstname']" class="w-full p-2 text-base border rounded-md"/>
             </div>
+            <div>
+              <label for="lastname" class="block text-sm font-medium leading-6 text-gray-900">Lastname</label>
+              <InputText type="text" v-model="lastname" placeholder="Lastname" 
+                :error="errors['lastname']" class="w-full p-2 text-base border rounded-md"/>
+            </div>
+            <div>
+              <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
+              <InputText type="text" v-model="username" placeholder="Username" 
+                :error="errors['username']" class="w-full p-2 text-base border rounded-md"/>
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+              <InputText type="text" v-model="email" placeholder="Email address" 
+                :error="errors['email']" class="w-full p-2 text-base border rounded-md"/>
+            </div>
+            <div>
+              <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+              <InputText type="password" v-model="password" placeholder="Password" 
+                :error="errors['password']" class="w-full p-2 text-base border rounded-md"/>
+            </div>
+            <div>
+              <button type="submit" class="w-full py-2 px-4 text-white bg-red-600 hover:bg-red-700 transition rounded-xl">
+                Register Me!
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right side: Image upload -->
+        <div class="w-1/4 p-4 border-l border-gray-300 ml-15">
+          <h3 class="text-xl font-bold mb-4">Upload Image:</h3>
+          <ImageUpload v-model="images" />
+          <div class="mt-6 p-4 bg-gray-100 rounded-lg border border-gray-300 shadow-md">
+            <h2 class="text-lg font-semibold mb-2">Preview</h2>
+            <p><strong>ImageUrl: {{ images }}</strong></p>
           </div>
         </div>
       </div>
