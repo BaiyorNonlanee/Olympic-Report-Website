@@ -5,13 +5,14 @@ import InfoService from '@/services/InfoService';
 import olympicInfo from '@/components/olympicInfo.vue'
 import { type Country } from '@/types'
 import { useAuthStore } from '@/stores/auth';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const countries = ref<Country[]>([]);
 // ref<Country[] | null>(null)
 const totalCountry = ref(0)
 const authStore = useAuthStore()
 const router = useRouter()
+const route = useRoute()
 const allCountries = ref<Country[]>([]);
 
 
@@ -52,6 +53,7 @@ watch(() => props.page, fetchCountries, { immediate: true });
 // Initial fetch when component mounts
 onMounted(fetchCountries);
 
+
 // Fetch countries
 watchEffect(() => {
   InfoService.getCountries(limit.value, page.value)
@@ -63,7 +65,9 @@ watchEffect(() => {
       countries.value.forEach(country => {
   console.log(`Country: ${country.countryName}, Gold: ${country.gold}`);
 });
-calculateAndSortCountries();
+
+
+// calculateAndSortCountries();
 console.log('After sorting:', countries.value);
 
      })
@@ -95,9 +99,9 @@ function logout() {
   router.push({name: 'login'})
 }
 
-function goToAddData() {
-  router.push({ name: 'add-data' }); // เปลี่ยน 'add-data' ให้ตรงกับชื่อเส้นทางที่ใช้สำหรับหน้า add data
-}
+// function goToAddData() {
+//   router.push({ name: 'add-data' }); // เปลี่ยน 'add-data' ให้ตรงกับชื่อเส้นทางที่ใช้สำหรับหน้า add data
+// }
 </script>
 
 <template>

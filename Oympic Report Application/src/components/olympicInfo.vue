@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, defineProps, onMounted } from 'vue'; 
-import { type Country } from '@/types';
+import type { Country } from '@/types';
 import { RouterLink } from 'vue-router';
-import SportListView from "@/views/event/SportListView.vue"
-import SportService from '@/services/SportService';
+import SportListView from "@/views/event/SportListView.vue";
+import InfoService from '@/services/InfoService';
 
 const props = defineProps<{
   country: Country;
@@ -14,21 +14,12 @@ const totalSilver = ref(0);
 const totalBronze = ref(0);
 const sports = ref([]);
 
+// Function to update totals when receiving event from child component
 const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBronze: number }) => {
   totalGold.value = totals.totalGold;
   totalSilver.value = totals.totalSilver;
   totalBronze.value = totals.totalBronze;
 };
-
-  onMounted(() => {
-    SportService.getSports()
-        .then(response => {
-            //sports.value = response.data;
-        })
-        .catch(error => {
-            console.error("Error fetching sports data:", error);
-        });
-});
 
 
 </script>
@@ -47,4 +38,3 @@ const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBro
   <td>{{ totalSilver }}</td>
   <td>{{ totalBronze }}</td>
 </template>
-
