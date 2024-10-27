@@ -180,7 +180,7 @@ function goToAddData() {
               required
             />
           </form>
-          <span v-if="authStore.isAdmin">
+          <span v-if="authStore.isAdmin || authStore.isMasterAdmin" >
             <RouterLink
               to="/add-data"
               class="inline-block bg-blue-600 text-white font-regular py-2 px-4 rounded hover:bg-blue-500 transition"
@@ -188,11 +188,7 @@ function goToAddData() {
               Add New Country
             </RouterLink>
           </span>
-        </div>
-        <span v-if="authStore.isMasterAdmin || authStore.isAdmin">
-        <RouterLink to="/add-data">Add New Country</RouterLink>
-       </span>
-        
+        </div>    
         <div class="block md:flex justify-start w-full overflow-x-auto mt-4">
           <table
             class="w-full max-w-screen-lg border-collapse bg-customBlue rounded-[30px] overflow-hidden"
@@ -265,7 +261,6 @@ function goToAddData() {
     </div>
 
     <div class="flex justify-center mt-4 space-x-4">
-      <!-- เพิ่ม space-x-4 เพื่อเว้นระยะระหว่างปุ่ม -->
     </div>
   </div>
 </template>

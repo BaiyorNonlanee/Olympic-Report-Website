@@ -3,14 +3,16 @@ import { ref, onMounted, computed } from 'vue'
 import UserService from '@/services/UserService'
 import BaseSelectRole from '@/components/BaseSelectRole.vue'
 import { useRouter } from 'vue-router'
-import { log } from 'util'
 import { Role } from '../types'
+import { useMessageStore } from '@/stores/message'
+
 
 const users = ref([])
 const isEditing = ref(false)
 const roleOptions = ref<Role[]>([]);
 const router = useRouter()
 const userJson: any = localStorage.getItem('user')
+const messageStore = useMessageStore();
 
 
 const fetchData = async () => {
@@ -49,8 +51,19 @@ const updateSelectedRole = async (userId: number, selectedRole: number) => {
   const user = users.value.find(user => user.id === userId);
   if (user) {
     user.selectedRole = selectedRole; // Update the user's selected role
-    await submitChanges()
-  }
+    try {
+      await submitChanges();
+      messageStore.updateMessage('Role change successful, please log in again.');
+      setTimeout(() => {
+        messageStore.resetMessage(); // Clear message after a few seconds
+      }, 3000);
+    } catch (error) {
+      console.error('Error updating role:', error);
+      messageStore.updateMessage('Error updating role. Please try again.');
+      setTimeout(() => {
+        messageStore.resetMessage();
+      }, 3000);
+    }  }
 };
 
 
@@ -67,40 +80,31 @@ const filteredRoleOptions = computed(() => {
 
 const submitChanges = async () => {
   try {
-    // Update role สำหรับผู้ใช้แต่ละคน
     await Promise.all(
       users.value.map((user) => {
-        // ดึงชื่อ role จาก id ที่เลือก
         const selectedRoleName = roleOptions.value.find(
           (role) => role.id === user.selectedRole
         )?.roles
 
-        // ตรวจสอบว่ามีการเลือก role หรือไม่
         if (!selectedRoleName) {
           console.warn(`No role selected for user ${user.id}`)
-          return Promise.resolve() // ไม่ทำอะไรถ้าไม่มีการเลือก role
+          return Promise.resolve() 
         }
 
-        console.log(user.selectedRole) // ควรใช้ user.selectedRole
-        console.log(user.id)
+        console.log(user.selectedRole) 
 
         const users = JSON.parse(userJson)
 
-        // Access the id property
         const userId = users.id
         console.log(selectedRoleName[0]);
         
-
-        // ส่ง id=1 สำหรับ MASTERADMIN, userId และ role
         return UserService.editUserRole(userId, user.id, selectedRoleName)
         
       })
     )
 
-    // alert('Roles updated successfully!');
     toggleEdit()
     await fetchData()
-    // window.location.reload();
   } catch (error) {
     console.error('Error updating roles:', error)
   }
@@ -108,6 +112,14 @@ const submitChanges = async () => {
 </script>
 
 <template>
+    <div class="relative">
+    <p
+      v-if="messageStore.message"
+    
+      class="fixed top-0 left-0 w-full p-3 bg-green-500 text-black font-medium shadow-lg z-50 text-center"
+    >
+      {{ messageStore.message }}
+    </p>
   <div
     v-if="users && users.length > 0"
     class="flex flex-col justify-center items-center overflow-x-auto py-10 mt-4 px-4 sm:px-6"
@@ -155,4 +167,5 @@ const submitChanges = async () => {
   <div v-else class="mt-4">
     <p>No users data available.</p>
   </div>
+</div>
 </template>
