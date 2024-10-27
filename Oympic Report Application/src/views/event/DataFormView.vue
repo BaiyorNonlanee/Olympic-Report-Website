@@ -122,49 +122,49 @@ const onSubmit = handleSubmit((values) => {
 </script>
 
 <template>
-  <h1 class="text-center text-3xl font-bold mb-4" style="margin-top: 3%; color: #0d3b66">
+  <h1 class="text-center text-3xl font-bold mb-4 mt-3" style="color: #0d3b66">
     ADD NEW COUNTRY
   </h1>
 
-  <div class="container mx-auto p-4 rounded-xl" style="background-color: beige">
+  <div class="container mx-auto p-4 md:px-16 rounded-xl" style="background-color: beige">
     <form @submit.prevent="onSubmit" class="w-full h-auto p-6 relative rounded-xl">
-      <div class="form-group mb-4 flex items-center">
-        <label for="countryName" class="block mb-5 w-1/3">Country Name:</label>
+      <div class="form-group mb-4 flex flex-col md:flex-row items-start">
+        <label for="countryName" class="block mb-2 md:mb-0 md:w-1/3">Country Name:</label>
         <BaseInput
           v-model="countryName"
           type="text"
           id="countryName"
           placeholder="Country Name"
-          class="w-1/3 border border-gray-300 rounded-xl p-2"
+          class="md:w-1/3 w-full border border-gray-300 rounded-xl p-2"
           style="min-height: 40px; resize: vertical"
         />
         <span class="text-red-600">{{ countryNameError }}</span>
       </div>
 
-      <div class="form-group mb-4 flex items-center">
-        <label for="description" class="block mb-5 w-1/3">Description:</label>
+      <div class="form-group mb-4 flex flex-col md:flex-row items-start">
+        <label for="description" class="block mb-2 md:mb-0 md:w-1/3">Description:</label>
         <BaseInput
           v-model="country.description"
           type="text"
           id="description"
           placeholder="Description"
-          class="w-2/3 border border-gray-300 rounded-xl p-2"
+          class="md:w-2/3 w-full border border-gray-300 rounded-xl p-2"
           style="min-height: 80px; resize: vertical"
         />
       </div>
 
       <div class="form-group mb-4">
         <label class="block mb-5">Medals:</label>
-        <div class="flex space-x-4">
-          <div class="flex-1 flex items-center" style="margin-left: 10%">
+        <div class="flex flex-col md:flex-row space-x-0 md:space-x-4">
+          <div class="flex-1 flex items-center">
             <label for="gold" class="block mb-5 mr-2">Gold:</label>
-            <img src="@/assets/gold.png" alt="Gold Medal" class="w-6 h-10 mb-3 mr-3 ml-1" />
+            <img src="@/assets/gold.png" alt="Gold Medal" class="w-6 h-10 mb-3 mr-3" />
             <BaseInput
               v-model="country.gold"
               type="text"
               id="gold"
               placeholder="Gold"
-              class="w-1/3 border border-gray-300 rounded-xl p-2"
+              class="w-full border border-gray-300 rounded-xl p-2"
             />
           </div>
           <div class="flex-1 flex items-center">
@@ -175,7 +175,7 @@ const onSubmit = handleSubmit((values) => {
               type="text"
               id="silver"
               placeholder="Silver"
-              class="w-1/3 border border-gray-300 rounded-xl p-2"
+              class="w-full border border-gray-300 rounded-xl p-2"
             />
           </div>
           <div class="flex-1 flex items-center">
@@ -186,19 +186,19 @@ const onSubmit = handleSubmit((values) => {
               type="text"
               id="bronze"
               placeholder="Bronze"
-              class="w-1/3 border border-gray-300 rounded-xl p-2"
+              class="w-full border border-gray-300 rounded-xl p-2"
             />
           </div>
         </div>
       </div>
 
-      <div class="form-group mb-4 flex items-center">
-        <label for="sport" class="block mb-5 w-1/3">Sport:</label>
+      <div class="form-group mb-4 flex flex-col md:flex-row items-start">
+        <label for="sport" class="block mb-2 md:mb-0 md:w-1/3">Sport:</label>
         <BaseSelect
           v-model="country.sport.id"
           :options="sports"
           @onChange="handleSportChange"
-          class="w-min h-10 text-lg border border-gray-300 rounded-lg"
+          class="w-full md:w-min h-10 text-lg border border-gray-300 rounded-lg"
         />
       </div>
 
@@ -218,4 +218,6 @@ const onSubmit = handleSubmit((values) => {
   </div>
 </template>
 
+
 <style scoped></style>
+

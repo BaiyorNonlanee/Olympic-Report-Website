@@ -30,8 +30,13 @@ const handleChange = (event: Event) => {
 </script>
 
 <template>
-  <label v-if="props.label">{{ props.label }}</label>
-  <select class="mb-6" v-bind="$attrs" v-model="props.modelValue" @change="handleChange">
+  <label v-if="props.label" class="block mb-2">{{ props.label }}</label>
+  <select 
+    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 text-sm sm:text-base"
+    v-bind="$attrs"
+    v-model="props.modelValue" 
+    @change="handleChange"
+  >
     <option v-for="option in props.options" :key="option.id" :value="option.id">
       {{ option.roles }}
     </option>
