@@ -86,11 +86,6 @@ const schema = yup.object({
 const { handleSubmit, errors } = useForm({ validationSchema: schema });
 
 const { value: countryName, errorMessage: countryNameError } = useField<string>('countryName');
-const { value: description } = useField<string>('description');
-const { value: gold, errorMessage: goldError } = useField<number | null>('gold');
-const { value: silver, errorMessage: silverError } = useField<number | null>('silver');
-const { value: bronze, errorMessage: bronzeError } = useField<number | null>('bronze');
-const { value: sport } = useField('sport.id');
 
 watch(countryName, (newValue) => {
   country.value.countryName = newValue ;
