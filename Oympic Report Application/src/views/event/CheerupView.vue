@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useCommentsStore, defineProps } from '@/stores/comment'
+// import { useCommentsStore, defineProps } from '@/stores/comment'
+import { useCommentsStore } from '@/stores/comment'
 import { useAuthStore } from '@/stores/auth'
 import type { Country } from '@/types'
 import type { PropType } from 'vue'
@@ -18,8 +19,11 @@ const newComment = ref('')
 
 const addComment = () => {
   if (newComment.value.trim()) {
-    const username = authStore.currentUserName
-    commentsStore.addComment(props.country.countryName, newComment.value, username)
+    const username = authStore.currentUserName 
+    const userProfileImage = authStore.currentUserProfileImage 
+    const strings = userProfileImage[0]
+    const url = strings.slice(1,-1)
+    commentsStore.addComment(props.country.countryName, newComment.value, username, url)
     newComment.value = ''
   }
 }
@@ -30,10 +34,7 @@ const addComment = () => {
     <h1 class="text-customGreen2 font-bold text-4xl">Cheer Your Athlete Here!</h1>
 
     <div
-      v-if="
-        commentsStore.commentsByCountry[props.country.countryName] &&
-        commentsStore.commentsByCountry[props.country.countryName].length
-      "
+      v-if="commentsStore.commentsByCountry[props.country.countryName]?.length"
       class="my-4"
     >
       <h2 class="text-2xl font-semibold mb-4 text-customBlue1 text-left">Comments:</h2>
@@ -43,10 +44,13 @@ const addComment = () => {
       <div
         v-for="comment in commentsStore.commentsByCountry[props.country.countryName]"
         :key="comment.id"
-        class="bg-customBrown2 border-2 border-customBrown1 rounded-lg p-4 my-1.5 text-lg text-left"
+        class="bg-customBrown2 border-2 border-customBrown1 rounded-lg p-4 my-1.5 text-lg text-left flex items-center"
       >
-        <strong>{{ comment.username }}:</strong>
-        {{ comment.text }}
+        <img :src="comment.images.toString()" alt="Profile" class="w-10 h-10 rounded-full mr-3" />
+        <div>
+          <strong>{{ comment.username }}:</strong>
+          {{ comment.text }}
+        </div>
       </div>
     </div>
 
