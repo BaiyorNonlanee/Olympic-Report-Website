@@ -178,7 +178,7 @@ const handleSportChange = (sportId: string | number) => {
 
       <div>
         <h3>Upload Image:</h3>
-        <ImageUpload v-model="country.image" />
+        <ImageUpload v-model="country.images" />
       </div>
 
       <button

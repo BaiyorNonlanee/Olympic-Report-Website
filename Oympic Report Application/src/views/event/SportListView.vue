@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, computed, defineEmits, watchEffect } from 'vue'
+import { defineProps, ref, computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router';
 import { useForm, useField } from 'vee-validate';
 import * as yup from 'yup';
@@ -9,11 +9,12 @@ import InputTextSport from '@/components/InputTextSport.vue';
 
 const router = useRouter();
 
-const props = defineProps<{ country: Country }>();
-const emit = defineEmits(['updateTotals', 'updateCountry']);
+const props = defineProps<{ country: Country; totalGold: number; totalSilver: number; totalBronze: number; }>();
+const emit = defineEmits(['updateTotals']);
 const isEditing = ref(false);
 const editedSports = ref([...props.country.ownSports]);
 
+// การคำนวณยอดรวมเหรียญ
 const totalGold = computed(() =>
   editedSports.value.reduce((sum, sport) => sum + sport.gold_medals, 0)
 );
@@ -23,23 +24,6 @@ const totalSilver = computed(() =>
 const totalBronze = computed(() =>
   editedSports.value.reduce((sum, sport) => sum + sport.bronze_medals, 0)
 );
-
-// Validation schema for sports fields
-const sportsSchema = yup.object({
-  sportName: yup.string().required('Sport name is required'),
-  gold_medals: yup.number()
-    .required('Gold medals are required')
-    .test('is-positive', 'Gold medals must be 0 or more', (value) => value >= 0),
-  silver_medals: yup.number()
-    .required('Silver medals are required')
-    .test('is-positive', 'Silver medals must be 0 or more', (value) => value >= 0),
-  bronze_medals: yup.number()
-    .required('Bronze medals are required')
-    .test('is-positive', 'Bronze medals must be 0 or more', (value) => value >= 0),
-});
-
-// Set up form validation
-const { handleSubmit } = useForm({ validationSchema: sportsSchema });
 
 // Emit the totals whenever they change
 watchEffect(() => {
@@ -61,7 +45,6 @@ const submitChanges = async () => {
     for (const sport of editedSports.value) {
       await SportService.updateSport(sport.id, sport);
     }
-    emit('updateCountry', editedSports.value);
     isEditing.value = false;
     router.push({ name: 'home-view' }); 
   } catch (error) {
@@ -74,6 +57,7 @@ const { value: sportName, errorMessage: sportNameError } = useField('sportName')
 const { value: goldMedals, errorMessage: goldMedalsError } = useField('gold_medals');
 const { value: silverMedals, errorMessage: silverMedalsError } = useField('silver_medals');
 const { value: bronzeMedals, errorMessage: bronzeMedalsError } = useField('bronze_medals');
+
 </script>
 
 <template>

@@ -132,13 +132,8 @@ const submitChanges = async () => {
           <td>{{ user.lastname }}</td>
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
-          <td>
-            
-              
-                <BaseSelectRole v-model="user.selectedRole" :options="roleOptions" @onChange="updateSelectedRole(user.id, $event)" />
-              
-             
-            
+          <td>          
+                <BaseSelectRole v-model="user.selectedRole" :options="roleOptions" @onChange="updateSelectedRole(user.id, $event)" />       
           </td>
         </tr>
       </tbody>

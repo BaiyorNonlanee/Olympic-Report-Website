@@ -9,7 +9,7 @@ export interface Country{
     rankValue: number,
     roles: string[] | null,
     images: string[],
-    sport: Sport
+    sport: Sport[]
 }
 
 export interface Sport {

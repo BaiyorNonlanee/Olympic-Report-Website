@@ -1,35 +1,30 @@
+<!-- olympicInfo.vue -->
 <script setup lang="ts">
-import { ref, defineProps, onMounted } from 'vue'; 
-import { type Country } from '@/types';
+import { ref, defineProps, watch, computed } from 'vue';
+import type { Country } from '@/types';
 import { RouterLink } from 'vue-router';
-import SportListView from "@/views/event/SportListView.vue"
-import SportService from '@/services/SportService';
+import SportListView from "@/views/event/SportListView.vue";
 
+// Define props and emit
 const props = defineProps<{
   country: Country;
 }>();
+const emit = defineEmits(['updateMedals']);
 
-const totalGold = ref(0);
-const totalSilver = ref(0);
-const totalBronze = ref(0);
-const sports = ref([]);
+// Calculate total medals
+const totalGold = computed(() => props.country.ownSports?.reduce((total, sport) => total + (sport.gold_medals || 0), 0) || 0);
+const totalSilver = computed(() => props.country.ownSports?.reduce((total, sport) => total + (sport.silver_medals || 0), 0) || 0);
+const totalBronze = computed(() => props.country.ownSports?.reduce((total, sport) => total + (sport.bronze_medals || 0), 0) || 0);
 
-const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBronze: number }) => {
-  totalGold.value = totals.totalGold;
-  totalSilver.value = totals.totalSilver;
-  totalBronze.value = totals.totalBronze;
-};
-
-  onMounted(() => {
-    SportService.getSports()
-        .then(response => {
-            //sports.value = response.data;
-        })
-        .catch(error => {
-            console.error("Error fetching sports data:", error);
-        });
-});
-
+// Emit the medal totals when they change
+watch([totalGold, totalSilver, totalBronze], () => {
+  emit('updateMedals', {
+    countryId: props.country.id,
+    totalGold: totalGold.value,
+    totalSilver: totalSilver.value,
+    totalBronze: totalBronze.value,
+  });
+}, { immediate: true });
 
 </script>
 
@@ -37,14 +32,19 @@ const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBro
   <td>
     <RouterLink
       class="text-black underline hover:text-blue-500 hover:underline"
-      :to="{ name: 'country-detail-view', params: { id: country.id } }"
+      :to="{ name: 'country-detail-view', params: { id: props.country.id } }"
     >
-      {{ country.countryName }}
+      {{ props.country.countryName }}
     </RouterLink>
-    <SportListView :country="country" @updateTotals="updateTotals" v-show="false" />
+    <SportListView 
+      :country="props.country" 
+      :totalGold="totalGold" 
+      :totalSilver="totalSilver" 
+      :totalBronze="totalBronze"
+      v-show="false" 
+    />
   </td>
   <td>{{ totalGold }}</td>
   <td>{{ totalSilver }}</td>
   <td>{{ totalBronze }}</td>
 </template>
-
