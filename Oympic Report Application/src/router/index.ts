@@ -43,8 +43,8 @@ const router = createRouter({
       component: AddDataView
     },
     {
-      path: '/list-user',
-      name: 'list-user',
+      path: '/users',
+      name: 'users',
       component: UserView
     },
     {

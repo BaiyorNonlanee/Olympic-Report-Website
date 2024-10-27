@@ -123,12 +123,11 @@ const onSubmit = handleSubmit((values) => {
 
 <template>
   <h1 class="text-center text-3xl font-bold mb-4" style="margin-top: 3%; color: #0d3b66">
-    Add Information
+    ADD NEW COUNTRY
   </h1>
 
-  <div class="container mx-auto p-4" style="background-color: beige">
-    <form @submit.prevent="onSubmit" class="w-full h-auto p-6 relative rounded-xl p-2">
-
+  <div class="container mx-auto p-4 rounded-xl" style="background-color: beige">
+    <form @submit.prevent="onSubmit" class="w-full h-auto p-6 relative rounded-xl">
       <div class="form-group mb-4 flex items-center">
         <label for="countryName" class="block mb-5 w-1/3">Country Name:</label>
         <BaseInput
@@ -136,11 +135,10 @@ const onSubmit = handleSubmit((values) => {
           type="text"
           id="countryName"
           placeholder="Country Name"
-          class="w-1/3 border border-gray-300 rounded p-2 resize rounded-xl"
+          class="w-1/3 border border-gray-300 rounded-xl p-2"
           style="min-height: 40px; resize: vertical"
         />
-        <span class="text-red-600 ">{{ countryNameError }}</span>
-
+        <span class="text-red-600">{{ countryNameError }}</span>
       </div>
 
       <div class="form-group mb-4 flex items-center">
@@ -150,7 +148,7 @@ const onSubmit = handleSubmit((values) => {
           type="text"
           id="description"
           placeholder="Description"
-          class="w-2/3 border border-gray-300 rounded p-2 resize rounded-xl"
+          class="w-2/3 border border-gray-300 rounded-xl p-2"
           style="min-height: 80px; resize: vertical"
         />
       </div>
@@ -166,7 +164,7 @@ const onSubmit = handleSubmit((values) => {
               type="text"
               id="gold"
               placeholder="Gold"
-              class="w-1/3 border border-gray-300 rounded p-2 rounded-xl"
+              class="w-1/3 border border-gray-300 rounded-xl p-2"
             />
           </div>
           <div class="flex-1 flex items-center">
@@ -177,7 +175,7 @@ const onSubmit = handleSubmit((values) => {
               type="text"
               id="silver"
               placeholder="Silver"
-              class="w-1/3 border border-gray-300 rounded p-2 rounded-xl"
+              class="w-1/3 border border-gray-300 rounded-xl p-2"
             />
           </div>
           <div class="flex-1 flex items-center">
@@ -188,7 +186,7 @@ const onSubmit = handleSubmit((values) => {
               type="text"
               id="bronze"
               placeholder="Bronze"
-              class="w-1/3 border border-gray-300 rounded p-2 rounded-xl"
+              class="w-1/3 border border-gray-300 rounded-xl p-2"
             />
           </div>
         </div>
@@ -196,7 +194,12 @@ const onSubmit = handleSubmit((values) => {
 
       <div class="form-group mb-4 flex items-center">
         <label for="sport" class="block mb-5 w-1/3">Sport:</label>
-        <BaseSelect v-model="country.sport.id" :options="sports" @onChange="handleSportChange" class="w-min h-10 text-lg border border-gray-300 rounded-lg"/>
+        <BaseSelect
+          v-model="country.sport.id"
+          :options="sports"
+          @onChange="handleSportChange"
+          class="w-min h-10 text-lg border border-gray-300 rounded-lg"
+        />
       </div>
 
       <div>
@@ -205,7 +208,7 @@ const onSubmit = handleSubmit((values) => {
       </div>
 
       <button
-        class="submit-button w-full py-2 text-white bg-red-600 rounded hover:bg-red-700 transition rounded-xl"
+        class="submit-button w-full py-2 text-white bg-red-600 rounded-xl hover:bg-red-700 transition"
         style="margin-top: 2%"
         type="submit"
       >
@@ -213,15 +216,6 @@ const onSubmit = handleSubmit((values) => {
       </button>
     </form>
   </div>
-  <div class="mt-6 p-4 bg-white rounded-lg border border-gray-300 shadow-md">
-      <h2 class="text-lg font-semibold mb-2">Preview</h2>
-      <p><strong>Country Name: </strong> {{ country.countryName }}</p>
-      <p><strong>Description: </strong> {{ country.description }}</p>
-      <p><strong>Gold: </strong> {{ country.gold }}</p>
-      <p><strong>Sliver</strong> {{ country.silver }}</p>
-      <p><strong>Bronze: </strong> {{ country.bronze }}</p>
-      <p><strong>Sport: </strong> {{ country.sport.sportName }}</p>
-    </div>
 </template>
 
 <style scoped></style>
