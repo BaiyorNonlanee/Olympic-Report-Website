@@ -14,6 +14,7 @@ const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
 const allCountries = ref<Country[]>([]);
+const medalData = ref<Map<number, { totalGold: number; totalSilver: number; totalBronze: number }>>(new Map());
 
 
 const props = defineProps({
@@ -63,21 +64,19 @@ watchEffect(() => {
       totalCountry.value = parseInt(response.headers['x-total-count']);
       console.log('Before sorting:', countries.value);
       countries.value.forEach(country => {
-  console.log(`Country: ${country.countryName}, Gold: ${country.gold}`);
-});
+        console.log(`Country: ${country.countryName}, Gold: ${country.gold}`); // Fixed
+      });
 
-
-// calculateAndSortCountries();
-console.log('After sorting:', countries.value);
-
-     })
+      // calculateAndSortCountries();
+      console.log('After sorting:', countries.value);
+    })
     .catch((error) => {
       console.error('Error fetching data:', error)
     })
-})
+});
+
 const calculateAndSortCountries = () => {
   allCountries.value.forEach(country => {
-    console.log(`Country: ${country.countryName}, Gold: ${country.gold}`); // ตรวจสอบค่าที่เป็น gold
   });
 
   // จัดเรียงประเทศตามจำนวนเหรียญทอง
@@ -99,9 +98,20 @@ function logout() {
   router.push({name: 'login'})
 }
 
-// function goToAddData() {
-//   router.push({ name: 'add-data' }); // เปลี่ยน 'add-data' ให้ตรงกับชื่อเส้นทางที่ใช้สำหรับหน้า add data
-// }
+// รับข้อมูลเหรียญรวมจาก olympicInfo
+const updateMedals = (data: { countryId: number; totalGold: number; totalSilver: number; totalBronze: number }) => {
+  medalData.value.set(data.countryId, data);
+};
+
+// จัดอันดับประเทศตามเหรียญทอง
+const rankedCountries = computed(() => {
+  return countries.value
+    .map(country => ({
+      ...country,
+      totalGold: medalData.value.get(country.id)?.totalGold || 0
+    }))
+    .sort((a, b) => b.totalGold - a.totalGold);
+});
 </script>
 
 <template>
@@ -214,9 +224,9 @@ function logout() {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(country, index) in countries" :key="index" class="text-center odd:bg-white h-16">
-                <td>{{ index + 1 }}</td>
-                <olympicInfo :country="country" />
+              <tr v-for="(country, index) in rankedCountries" :key="country.id" class="text-center odd:bg-white h-16">
+                <td>{{ (page-1)*limit+index + 1 }}</td>
+                <olympicInfo :country="country" @updateMedals="updateMedals"/>
               </tr>
             </tbody>
           </table>

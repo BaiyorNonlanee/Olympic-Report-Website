@@ -1,26 +1,30 @@
+<!-- olympicInfo.vue -->
 <script setup lang="ts">
-import { ref, defineProps, watch } from 'vue'; 
+import { ref, defineProps, watch, computed } from 'vue';
 import type { Country } from '@/types';
 import { RouterLink } from 'vue-router';
 import SportListView from "@/views/event/SportListView.vue";
 
+// Define props and emit
 const props = defineProps<{
   country: Country;
 }>();
+const emit = defineEmits(['updateMedals']);
 
-const totalGold = ref(0);
-const totalSilver = ref(0);
-const totalBronze = ref(0);
+// Calculate total medals
+const totalGold = computed(() => props.country.ownSports?.reduce((total, sport) => total + (sport.gold_medals || 0), 0) || 0);
+const totalSilver = computed(() => props.country.ownSports?.reduce((total, sport) => total + (sport.silver_medals || 0), 0) || 0);
+const totalBronze = computed(() => props.country.ownSports?.reduce((total, sport) => total + (sport.bronze_medals || 0), 0) || 0);
 
-// คำนวณยอดรวมเหรียญ
-const calculateTotals = () => {
-  totalGold.value = props.country.ownSports?.reduce((total, sport) => total + (sport.gold_medals || 0), 0) || 0;
-  totalSilver.value = props.country.ownSports?.reduce((total, sport) => total + (sport.silver_medals || 0), 0) || 0;
-  totalBronze.value = props.country.ownSports?.reduce((total, sport) => total + (sport.bronze_medals || 0), 0) || 0;
-};
-
-// เรียกใช้ calculateTotals เมื่อ props.country เปลี่ยนแปลง
-watch(() => props.country, calculateTotals, { immediate: true });
+// Emit the medal totals when they change
+watch([totalGold, totalSilver, totalBronze], () => {
+  emit('updateMedals', {
+    countryId: props.country.id,
+    totalGold: totalGold.value,
+    totalSilver: totalSilver.value,
+    totalBronze: totalBronze.value,
+  });
+}, { immediate: true });
 
 </script>
 
@@ -28,16 +32,15 @@ watch(() => props.country, calculateTotals, { immediate: true });
   <td>
     <RouterLink
       class="text-black underline hover:text-blue-500 hover:underline"
-      :to="{ name: 'country-detail-view', params: { id: country.id } }"
+      :to="{ name: 'country-detail-view', params: { id: props.country.id } }"
     >
-      {{ country.countryName }}
+      {{ props.country.countryName }}
     </RouterLink>
     <SportListView 
-      :country="country" 
+      :country="props.country" 
       :totalGold="totalGold" 
       :totalSilver="totalSilver" 
-      :totalBronze="totalBronze" 
-      @updateTotals="calculateTotals" 
+      :totalBronze="totalBronze"
       v-show="false" 
     />
   </td>
