@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref, defineProps, onMounted } from 'vue'; 
+import { ref, defineProps, watch } from 'vue'; 
 import type { Country } from '@/types';
 import { RouterLink } from 'vue-router';
 import SportListView from "@/views/event/SportListView.vue";
-import InfoService from '@/services/InfoService';
 
 const props = defineProps<{
   country: Country;
@@ -12,15 +11,16 @@ const props = defineProps<{
 const totalGold = ref(0);
 const totalSilver = ref(0);
 const totalBronze = ref(0);
-const sports = ref([]);
 
-// Function to update totals when receiving event from child component
-const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBronze: number }) => {
-  totalGold.value = totals.totalGold;
-  totalSilver.value = totals.totalSilver;
-  totalBronze.value = totals.totalBronze;
+// คำนวณยอดรวมเหรียญ
+const calculateTotals = () => {
+  totalGold.value = props.country.ownSports?.reduce((total, sport) => total + (sport.gold_medals || 0), 0) || 0;
+  totalSilver.value = props.country.ownSports?.reduce((total, sport) => total + (sport.silver_medals || 0), 0) || 0;
+  totalBronze.value = props.country.ownSports?.reduce((total, sport) => total + (sport.bronze_medals || 0), 0) || 0;
 };
 
+// เรียกใช้ calculateTotals เมื่อ props.country เปลี่ยนแปลง
+watch(() => props.country, calculateTotals, { immediate: true });
 
 </script>
 
@@ -32,7 +32,14 @@ const updateTotals = (totals: { totalGold: number; totalSilver: number; totalBro
     >
       {{ country.countryName }}
     </RouterLink>
-    <SportListView :country="country" @updateTotals="updateTotals" v-show="false" />
+    <SportListView 
+      :country="country" 
+      :totalGold="totalGold" 
+      :totalSilver="totalSilver" 
+      :totalBronze="totalBronze" 
+      @updateTotals="calculateTotals" 
+      v-show="false" 
+    />
   </td>
   <td>{{ totalGold }}</td>
   <td>{{ totalSilver }}</td>
