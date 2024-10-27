@@ -45,15 +45,15 @@ const fetchCountries = async () => {
         calculateAndSortCountries();
 
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error('Error fetching data:', error)
   }
-};
+}
 
 // Watch the page prop for changes and fetch countries
-watch(() => props.page, fetchCountries, { immediate: true });
+watch(() => props.page, fetchCountries, { immediate: true })
 
 // Initial fetch when component mounts
-onMounted(fetchCountries);
+onMounted(fetchCountries)
 
 
 // Fetch countries
@@ -131,56 +131,57 @@ const rankedCountries = computed(() => {
 
 <template>
   <div class="wrapper">
-    <!-- Navbar with user authentication -->
-    <nav class="navbar bg-black p-4 flex items-center justify-between">
-      <!-- Center the logo -->
-      <div class="flex-1 flex justify-center">
-        <img
-          src="@/assets/logo-2.png"
-          alt="Logo"
-          class="w-[120px] h-[120px] md:w-[150px] md:h-[150px]"
-        />
-      </div>
+    <nav class="navbar bg-black p-4 flex items-center justify-between w-full">
+      <img
+        src="@/assets/logo-2.png"
+        alt="Logo"
+        class="w-[120px] h-[120px] md:w-[150px] md:h-[150px] items-center"
+      />
 
       <!-- User Authentication Links -->
-      <ul v-if="!authStore.currentUserName" class="flex navbar-nav ml-auto text-white">
-        <li class="nav-item px-2">
-          <router-link to="/register" class="nav-link">
-            <div class="flex items-center">
-              <span class="ml-3">Sign Up</span>
-            </div>
-          </router-link>
-        </li>
-        <li class="nav-item px-2">
-          <router-link to="/login" class="nav-link">
-            <div class="flex items-center">
-              <span class="ml-3">Login</span>
-            </div>
-          </router-link>
-        </li>
-      </ul>
-      <ul v-if="authStore.currentUserName" class="flex navbar-nav ml-auto text-white">
-        <li class="nav-item px-2">
-          <router-link to="/profile" class="nav-link">
-            <div class="flex items-center">
-              <span class="ml-3">{{ authStore.currentUserName }}</span>
-            </div>
-          </router-link>
-        </li>
-        <li class="nav-item px-2">
-          <a class="nav-link hover:cursor-pointer text-white" @click="logout">
-            <div class="flex items-center">
-              <span class="ml-3">LogOut</span>
-            </div>
-          </a>
-        </li>
-        <li>
-          <span v-if="authStore.isMasterAdmin || authStore.isAdmin">
-        <RouterLink to="/list-user">List Of Users</RouterLink>
-       </span>
-        </li>
-      </ul>
+      <div class="flex-1 flex justify-end">
+        <ul v-if="!authStore.currentUserName" class="flex navbar-nav text-white">
+          <li class="nav-item px-2">
+            <router-link to="/register" class="nav-link">
+              <div class="flex items-center">
+                <span class="ml-3">Sign Up</span>
+              </div>
+            </router-link>
+          </li>
+          <li class="nav-item px-2">
+            <router-link to="/login" class="nav-link">
+              <div class="flex items-center">
+                <span class="ml-3">Login</span>
+              </div>
+            </router-link>
+          </li>
+        </ul>
+        <ul v-if="authStore.currentUserName" class="flex navbar-nav text-white space-x-4">
+          <li class="nav-item">
+            <router-link to="/profile" class="nav-link">
+              <div class="flex items-center">
+                <span class="ml-3">{{ authStore.currentUserName }}</span>
+              </div>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link hover:cursor-pointer text-white" @click="logout">
+              <div class="flex items-center">
+                <span class="ml-3">LogOut</span>
+              </div>
+            </a>
+          </li>
+          <li v-if="authStore.isMasterAdmin" class="nav-item">
+            <router-link to="/users" class="nav-link">
+              <div class="flex items-center">
+                <span class="ml-3">List Of Users</span>
+              </div>
+            </router-link>
+          </li>
+        </ul>
+      </div>
     </nav>
+
     <!-- <span v-if="authStore.isAdmin">
         <RouterLink to="/list-user">List Of Users</RouterLink>
        </span> -->
@@ -212,19 +213,18 @@ const rankedCountries = computed(() => {
               required
             />
           </form>
-          <span v-if="authStore.isAdmin">
-            <RouterLink
-              to="/add-data"
-              class="inline-block bg-blue-600 text-white font-regular py-2 px-4 rounded hover:bg-blue-500 transition"
-            >
-              Add New Country
-            </RouterLink>
-          </span>
+          <div class="flex items-center justify-end">
+            <!-- Updated to justify-end -->
+            <span v-if="authStore.isAdmin || authStore.isMasterAdmin">
+              <RouterLink
+                to="/add-data"
+                class="inline-flex items-center px-4 py-2 bg-white text-black border border-black rounded-[30px]"
+              >
+                +  Add New Country 
+              </RouterLink>
+            </span>
+          </div>
         </div>
-        <span v-if="authStore.isMasterAdmin || authStore.isAdmin">
-        <RouterLink to="/add-data">Add New Country</RouterLink>
-       </span>
-        
         <div class="block md:flex justify-start w-full overflow-x-auto mt-4">
           <table
             class="w-full max-w-screen-lg border-collapse bg-customBlue rounded-[30px] overflow-hidden"

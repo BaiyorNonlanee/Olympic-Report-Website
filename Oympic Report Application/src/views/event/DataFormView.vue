@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Country, Sport } from '@/types'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import InfoService from '@/services/InfoService'
 import { useRouter } from 'vue-router'
 import { useMessageStore } from '@/stores/message'
@@ -8,7 +8,8 @@ import SportService from '@/services/SportService'
 import BaseInput from '@/components/BaseInput.vue'
 import ImageUpload from '@/components/ImageUpload.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
-import { number } from 'yup'
+import { useForm, useField } from 'vee-validate';
+import * as yup from 'yup';
 
 const country = ref<Country>({
   id: 0,
@@ -72,6 +73,24 @@ function saveCountry() {
 
 const sports = ref<Sport[]>([])
 
+const schema = yup.object({
+  countryName: yup.string().required('Country name is required'),
+  description: yup.string(),
+  gold: yup.number().min(0, 'Gold must be a positive number').nullable(),
+  silver: yup.number().min(0, 'Silver must be a positive number').nullable(),
+  bronze: yup.number().min(0, 'Bronze must be a positive number').nullable(),
+  sport: yup.object({
+    id: yup.number().min(1, 'Please select a sport').nullable()
+  })
+});
+const { handleSubmit, errors } = useForm({ validationSchema: schema });
+
+const { value: countryName, errorMessage: countryNameError } = useField<string>('countryName');
+
+watch(countryName, (newValue) => {
+  country.value.countryName = newValue ;
+});
+
 onMounted(() => {
   SportService.getSports()
     .then((response) => {
@@ -82,12 +101,12 @@ onMounted(() => {
     })
 })
 
+
 // Method to handle the change event
 const handleSportChange = (sportId: string | number) => {
   console.log('Selected Sport ID:', sportId);
   SportService.getSportById(Number(sportId))
   .then((response) => {
-      console.log("aaaaaaaa", response.data);
       sportname.value = response.data.sportName
       sportid.value = response.data.id
       //sports.value = response.data
@@ -97,27 +116,29 @@ const handleSportChange = (sportId: string | number) => {
     })
   
 };
+const onSubmit = handleSubmit((values) => {
+  saveCountry(); 
+});
 </script>
 
 <template>
   <h1 class="text-center text-3xl font-bold mb-4" style="margin-top: 3%; color: #0d3b66">
-    Add Information
+    ADD NEW COUNTRY
   </h1>
 
-  <div class="container mx-auto p-4" style="background-color: beige">
-    <form @submit.prevent="saveCountry" class="w-full h-auto p-6 relative rounded-xl p-2">
-      <!-- ลบ class rounded ที่ซ้ำ -->
-
+  <div class="container mx-auto p-4 rounded-xl" style="background-color: beige">
+    <form @submit.prevent="onSubmit" class="w-full h-auto p-6 relative rounded-xl">
       <div class="form-group mb-4 flex items-center">
         <label for="countryName" class="block mb-5 w-1/3">Country Name:</label>
         <BaseInput
-          v-model="country.countryName"
+          v-model="countryName"
           type="text"
           id="countryName"
           placeholder="Country Name"
-          class="w-1/3 border border-gray-300 rounded p-2 resize rounded-xl"
+          class="w-1/3 border border-gray-300 rounded-xl p-2"
           style="min-height: 40px; resize: vertical"
         />
+        <span class="text-red-600">{{ countryNameError }}</span>
       </div>
 
       <div class="form-group mb-4 flex items-center">
@@ -127,7 +148,7 @@ const handleSportChange = (sportId: string | number) => {
           type="text"
           id="description"
           placeholder="Description"
-          class="w-2/3 border border-gray-300 rounded p-2 resize rounded-xl"
+          class="w-2/3 border border-gray-300 rounded-xl p-2"
           style="min-height: 80px; resize: vertical"
         />
       </div>
@@ -143,7 +164,7 @@ const handleSportChange = (sportId: string | number) => {
               type="text"
               id="gold"
               placeholder="Gold"
-              class="w-1/3 border border-gray-300 rounded p-2 rounded-xl"
+              class="w-1/3 border border-gray-300 rounded-xl p-2"
             />
           </div>
           <div class="flex-1 flex items-center">
@@ -154,7 +175,7 @@ const handleSportChange = (sportId: string | number) => {
               type="text"
               id="silver"
               placeholder="Silver"
-              class="w-1/3 border border-gray-300 rounded p-2 rounded-xl"
+              class="w-1/3 border border-gray-300 rounded-xl p-2"
             />
           </div>
           <div class="flex-1 flex items-center">
@@ -165,7 +186,7 @@ const handleSportChange = (sportId: string | number) => {
               type="text"
               id="bronze"
               placeholder="Bronze"
-              class="w-1/3 border border-gray-300 rounded p-2 rounded-xl"
+              class="w-1/3 border border-gray-300 rounded-xl p-2"
             />
           </div>
         </div>
@@ -173,7 +194,12 @@ const handleSportChange = (sportId: string | number) => {
 
       <div class="form-group mb-4 flex items-center">
         <label for="sport" class="block mb-5 w-1/3">Sport:</label>
-        <BaseSelect v-model="country.sport.id" :options="sports" @onChange="handleSportChange" class="w-min h-10 text-lg border border-gray-300 rounded-lg"/>
+        <BaseSelect
+          v-model="country.sport.id"
+          :options="sports"
+          @onChange="handleSportChange"
+          class="w-min h-10 text-lg border border-gray-300 rounded-lg"
+        />
       </div>
 
       <div>
@@ -182,7 +208,7 @@ const handleSportChange = (sportId: string | number) => {
       </div>
 
       <button
-        class="submit-button w-full py-2 text-white bg-red-600 rounded hover:bg-red-700 transition rounded-xl"
+        class="submit-button w-full py-2 text-white bg-red-600 rounded-xl hover:bg-red-700 transition"
         style="margin-top: 2%"
         type="submit"
       >
@@ -190,15 +216,6 @@ const handleSportChange = (sportId: string | number) => {
       </button>
     </form>
   </div>
-  <div class="mt-6 p-4 bg-white rounded-lg border border-gray-300 shadow-md">
-      <h2 class="text-lg font-semibold mb-2">Preview</h2>
-      <p><strong>Country Name: </strong> {{ country.countryName }}</p>
-      <p><strong>Description: </strong> {{ country.description }}</p>
-      <p><strong>Gold: </strong> {{ country.gold }}</p>
-      <p><strong>Sliver</strong> {{ country.silver }}</p>
-      <p><strong>Bronze: </strong> {{ country.bronze }}</p>
-      <p><strong>Sport: </strong> {{ country.sport.sportName }}</p>
-    </div>
 </template>
 
 <style scoped></style>

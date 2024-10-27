@@ -6,11 +6,12 @@ import * as yup from 'yup';
 import type { Country } from '@/types';
 import SportService from '@/services/SportService';
 import InputTextSport from '@/components/InputTextSport.vue';
+import { useMessageStore } from '@/stores/message';
 
 const router = useRouter();
-
-const props = defineProps<{ country: Country; totalGold: number; totalSilver: number; totalBronze: number; }>();
-const emit = defineEmits(['updateTotals']);
+const messageStore = useMessageStore();
+const props = defineProps<{ country: Country }>();
+const emit = defineEmits(['updateTotals', 'updateCountry']);
 const isEditing = ref(false);
 const editedSports = ref([...props.country.ownSports]);
 
@@ -24,6 +25,26 @@ const totalSilver = computed(() =>
 const totalBronze = computed(() =>
   editedSports.value.reduce((sum, sport) => sum + sport.bronze_medals, 0)
 );
+
+// Validation schema for sports fields
+const sportsSchema = yup.object({
+  gold_medals: yup.number()
+    .required('Gold medals are required')
+    .typeError('Gold medals must be a number')  // Error message for non-numeric input
+    .min(0, 'Gold medals must be 0 or more'),
+  silver_medals: yup.number()
+    .required('Silver medals are required')
+    .typeError('Silver medals must be a number')  // Error message for non-numeric input
+    .min(0, 'Silver medals must be 0 or more'),
+  bronze_medals: yup.number()
+    .required('Bronze medals are required')
+    .typeError('Bronze medals must be a number')  // Error message for non-numeric input
+    .min(0, 'Bronze medals must be 0 or more'),
+});
+
+// Set up form validation
+const { handleSubmit } = useForm({ validationSchema: sportsSchema });
+
 
 // Emit the totals whenever they change
 watchEffect(() => {
@@ -41,14 +62,29 @@ const toggleEdit = () => {
 
 // Handle form submission
 const submitChanges = async () => {
+  if (goldMedals.value === null || silverMedals.value === null || bronzeMedals.value === null) {
+    messageStore.updateMessage('Please enter valid medal counts.');
+    return; 
+  }
+
   try {
     for (const sport of editedSports.value) {
       await SportService.updateSport(sport.id, sport);
     }
     isEditing.value = false;
-    router.push({ name: 'home-view' }); 
+
+    messageStore.updateMessage('Sports updated successfully!');
+    
+    setTimeout(() => {
+      router.push({ name: 'home-view' });
+    }, 1000);
+
+    setTimeout(() => {
+      messageStore.resetMessage(); 
+    }, 3000);
   } catch (error) {
     console.error('Error updating sports:', error);
+    messageStore.updateMessage('Error updating sports, please try again.');
   }
 };
 
@@ -61,6 +97,13 @@ const { value: bronzeMedals, errorMessage: bronzeMedalsError } = useField('bronz
 </script>
 
 <template>
+  <div class="relative">
+    <p
+      v-if="messageStore.message"
+      class="fixed top-0 left-0 w-full p-3 bg-green-500 text-black font-medium shadow-lg z-50 text-center"
+    >
+      {{ messageStore.message }}
+    </p>
   <div v-if="country.ownSports && country.ownSports.length > 0" class="flex flex-col justify-center items-center overflow-x-auto py-10 mt-4 px-4 sm:px-6">
     <table class="w-full max-w-screen-lg table-auto border-collapse bg-blue-100 rounded-[30px] overflow-hidden">
       <thead class="border-b-2 border-gray-500">
@@ -138,4 +181,5 @@ const { value: bronzeMedals, errorMessage: bronzeMedalsError } = useField('bronz
   <div v-else class="mt-4">
     <p>No sports data available.</p>
   </div>
+</div>
 </template>
