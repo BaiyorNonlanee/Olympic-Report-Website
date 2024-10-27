@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Country, Sport } from '@/types'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import InfoService from '@/services/InfoService'
 import { useRouter } from 'vue-router'
 import { useMessageStore } from '@/stores/message'
@@ -8,7 +8,8 @@ import SportService from '@/services/SportService'
 import BaseInput from '@/components/BaseInput.vue'
 import ImageUpload from '@/components/ImageUpload.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
-import { number } from 'yup'
+import { useForm, useField } from 'vee-validate';
+import * as yup from 'yup';
 
 const country = ref<Country>({
   id: 0,
@@ -72,6 +73,29 @@ function saveCountry() {
 
 const sports = ref<Sport[]>([])
 
+const schema = yup.object({
+  countryName: yup.string().required('Country name is required'),
+  description: yup.string(),
+  gold: yup.number().min(0, 'Gold must be a positive number').nullable(),
+  silver: yup.number().min(0, 'Silver must be a positive number').nullable(),
+  bronze: yup.number().min(0, 'Bronze must be a positive number').nullable(),
+  sport: yup.object({
+    id: yup.number().min(1, 'Please select a sport').nullable()
+  })
+});
+const { handleSubmit, errors } = useForm({ validationSchema: schema });
+
+const { value: countryName, errorMessage: countryNameError } = useField<string>('countryName');
+const { value: description } = useField<string>('description');
+const { value: gold, errorMessage: goldError } = useField<number | null>('gold');
+const { value: silver, errorMessage: silverError } = useField<number | null>('silver');
+const { value: bronze, errorMessage: bronzeError } = useField<number | null>('bronze');
+const { value: sport } = useField('sport.id');
+
+watch(countryName, (newValue) => {
+  country.value.countryName = newValue ;
+});
+
 onMounted(() => {
   SportService.getSports()
     .then((response) => {
@@ -82,12 +106,12 @@ onMounted(() => {
     })
 })
 
+
 // Method to handle the change event
 const handleSportChange = (sportId: string | number) => {
   console.log('Selected Sport ID:', sportId);
   SportService.getSportById(Number(sportId))
   .then((response) => {
-      console.log("aaaaaaaa", response.data);
       sportname.value = response.data.sportName
       sportid.value = response.data.id
       //sports.value = response.data
@@ -97,6 +121,9 @@ const handleSportChange = (sportId: string | number) => {
     })
   
 };
+const onSubmit = handleSubmit((values) => {
+  saveCountry(); 
+});
 </script>
 
 <template>
@@ -105,19 +132,20 @@ const handleSportChange = (sportId: string | number) => {
   </h1>
 
   <div class="container mx-auto p-4" style="background-color: beige">
-    <form @submit.prevent="saveCountry" class="w-full h-auto p-6 relative rounded-xl p-2">
-      <!-- ลบ class rounded ที่ซ้ำ -->
+    <form @submit.prevent="onSubmit" class="w-full h-auto p-6 relative rounded-xl p-2">
 
       <div class="form-group mb-4 flex items-center">
         <label for="countryName" class="block mb-5 w-1/3">Country Name:</label>
         <BaseInput
-          v-model="country.countryName"
+          v-model="countryName"
           type="text"
           id="countryName"
           placeholder="Country Name"
           class="w-1/3 border border-gray-300 rounded p-2 resize rounded-xl"
           style="min-height: 40px; resize: vertical"
         />
+        <span class="text-red-600 ">{{ countryNameError }}</span>
+
       </div>
 
       <div class="form-group mb-4 flex items-center">
