@@ -117,8 +117,6 @@ const onSubmit = handleSubmit((values) => {
           <h3 class="text-xl font-bold mb-4">Upload Image:</h3>
           <ImageUpload v-model="images" />
           <div class="mt-6 p-4 bg-gray-100 rounded-lg border border-gray-300 shadow-md">
-            <h2 class="text-lg font-semibold mb-2">Preview</h2>
-            <p><strong>ImageUrl: {{ images }}</strong></p>
           </div>
         </div>
       </div>

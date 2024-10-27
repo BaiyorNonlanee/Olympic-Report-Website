@@ -31,13 +31,13 @@ export const useAuthStore = defineStore('auth', {
       return this.user?.images || [''];  
     },
     isAdmin(): boolean {
-      return this.user?.role.roles.includes('ROLE_ADMIN') || false
+      return this.user?.roles.includes('ROLE_ADMIN') || false
     },
     authorizationHeader(): string {
       return `Bearer ${this.token}`
     },
     isMasterAdmin(): boolean {
-      return this.user?.role.roles.includes('ROLE_MASTERADMIN') || false
+      return this.user?.roles.includes('ROLE_MASTERADMIN') || false
     }
   },
   actions: {

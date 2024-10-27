@@ -124,7 +124,7 @@ const goBack = () => {
       </div>
    </nav>
   <h1 class="text-center text-3xl font-bold mb-4" style="margin-top: 3%; color: #0d3b66">
-    Update Information
+    ADD NEW COUNTRY
   </h1>
 
   <div class="container mx-auto p-4">
@@ -222,16 +222,6 @@ const goBack = () => {
     </form>
   </div>
 </div>
-      <div class="mt-6 p-4 bg-white rounded-lg border border-gray-300 shadow-md">
-        <h2 class="text-lg font-semibold mb-2">Preview</h2>
-        <p><strong>Country Name: </strong> {{ country.countryName }}</p>
-        <p><strong>Description: </strong> {{ country.description }}</p>
-        <p><strong>Gold: </strong> {{ country.sport.gold_medals }}</p>
-        <p><strong>Sliver</strong> {{ country.sport.silver_medals }}</p>
-        <p><strong>Bronze: </strong> {{ country.sport.bronze_medals }}</p>
-        <p><strong>Sport: </strong> {{ country.sport.sportName }}</p>
-        <p><strong>ImageUrl: {{ country.images }}</strong></p>
-      </div>
 
 </template>
 

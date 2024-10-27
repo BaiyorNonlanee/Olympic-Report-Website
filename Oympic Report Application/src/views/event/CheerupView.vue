@@ -21,10 +21,18 @@ const addComment = () => {
   if (newComment.value.trim()) {
     const username = authStore.currentUserName 
     const userProfileImage = authStore.currentUserProfileImage 
-    const strings = userProfileImage[0]
-    const url = strings.slice(1,-1)
-    commentsStore.addComment(props.country.countryName, newComment.value, username, url)
-    newComment.value = ''
+    console.log(userProfileImage[0])
+    if (userProfileImage.length != 0) {
+      const strings = userProfileImage[0]
+      const url = strings.slice(1,-1)
+      commentsStore.addComment(props.country.countryName, newComment.value, username, url)
+      newComment.value = ''
+    } else {
+      commentsStore.addComment(props.country.countryName, newComment.value, username, userProfileImage[0])
+      newComment.value = ''
+    
+    }
+  
   }
 }
 </script>
@@ -46,7 +54,7 @@ const addComment = () => {
         :key="comment.id"
         class="bg-customBrown2 border-2 border-customBrown1 rounded-lg p-4 my-1.5 text-lg text-left flex items-center"
       >
-        <img :src="comment.images.toString()" alt="Profile" class="w-10 h-10 rounded-full mr-3" />
+        <img :src="comment.images" alt="Profile" class="w-10 h-10 rounded-full mr-3" />
         <div>
           <strong>{{ comment.username }}:</strong>
           {{ comment.text }}
