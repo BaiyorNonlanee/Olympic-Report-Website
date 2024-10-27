@@ -57,6 +57,8 @@ export interface User {
   username: string;
   email: string;
   role: Role;
+  //new
+  profileImage: string[]; 
   
 }
 export interface Role {
@@ -71,6 +73,12 @@ export interface RegisterUser {
   password: string;
   images: string[];
 }
-
+//new
+interface Comment {
+  id: number;
+  username: string;
+  text: string;
+  profileImage: string[]; 
+}
 
 
