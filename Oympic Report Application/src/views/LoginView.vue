@@ -5,6 +5,18 @@ import { useField, useForm } from 'vee-validate'
 import { useAuthStore } from '@/stores/auth'
 import router from '@/router'
 import { useMessageStore } from '@/stores/message'
+import ImageUpload from '@/components/ImageUpload.vue';
+import type { RegisterUser } from '@/types';
+import { ref } from 'vue'
+
+const registeruser = ref<RegisterUser> ({
+  firstname: '',
+  lastname: '',
+  username: '',
+  email: '',
+  password: '',
+  images: []
+})
 
 const authStore = useAuthStore()
 
@@ -23,6 +35,7 @@ const { errors, handleSubmit, isSubmitting } = useForm({
 const { value: email } = useField<string>('email')
 const { value: password } = useField<string>('password')
 const messageStore = useMessageStore()
+
 const onSubmit = handleSubmit((values) => {
   authStore
     .login(values.email, values.password)
@@ -105,6 +118,14 @@ const onSubmit = handleSubmit((values) => {
             </button>
           </div>
         </form>
+           <div>
+            <h3>Upload Image:</h3>
+            <ImageUpload v-model="registeruser.images" />
+            </div>
+            <div class="mt-6 p-4 bg-white rounded-lg border border-gray-300 shadow-md">
+      <h2 class="text-lg font-semibold mb-2">Preview</h2>
+      <p><strong>ImageUrl: {{registeruser }}</strong></p>
+    </div>
         <p class="mt-10 text-center text-sm text-gray-500">
           Not a member?
           {{ ' ' }}

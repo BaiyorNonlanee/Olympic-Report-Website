@@ -23,8 +23,10 @@ const convertStringToMedia = (str: string[]): any => {
 const emit = defineEmits(['update:modelValue'])
 const convertMediaToString = (media: any): string[] => {
     const output: string[] = []
+    console.log(" 321 " + media.value)
     media.forEach ((element: any) => {
         output.push(element.name)
+        console.log(element.name + " 123")
     })
     return output
 }
@@ -44,5 +46,8 @@ const authorizeHeader = computed(() => {
 </script>
 
 <template>
-  <Uploader :server="uploadUrl" @change="onChanged" :media="media" :headers="authorizeHeader"></Uploader>
+  <Uploader :server="uploadUrl" @change="onChanged" :media="media"></Uploader>
 </template> 
+<!-- <template>
+    <Uploader :server="uploadUrl" @change="onChanged" :media="media" :headers="authorizeHeader"></Uploader>
+  </template>  -->

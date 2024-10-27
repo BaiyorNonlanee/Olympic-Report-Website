@@ -63,6 +63,14 @@ export interface Role {
   id: number;
   roles: string;
 }
+export interface RegisterUser {
+  firstname: string;
+  lastname: string;
+  username: string;
+  email: string;
+  password: string;
+  images: string[];
+}
 
 
 

@@ -24,6 +24,6 @@ export default {
   getRoleUserById(id: string) {
     return apiClient.get(`/roles/${id}`);
   }
-    
+  
 }
 

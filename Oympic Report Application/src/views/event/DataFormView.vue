@@ -103,22 +103,31 @@ const handleSportChange = (sportId: string | number) => {
     })
   
 };
+// New method to handle the back navigation
+const goBack = () => {
+  router.push({ name: 'home-view' }); // Adjust the route name if needed
+};
 </script>
 
 <template>
-  <!-- <nav class="navbar bg-black p-4 flex items-center justify-center">
-    <img
-      src="@/assets/logo-2.png"
-      alt="Logo"
-      class="w-[120px] h-[120px] md:w-[150px] md:h-[150px]"
-    />
-  </nav> -->
-
+   <div class="wrapper bg-gradient-to-r from-white via-blue-400 via-purple-200 to-pink-300 min-h-screen">
+      <!-- Navbar with user authentication -->
+    <nav class="navbar bg-black p-4 flex items-center justify-between">
+        
+        <!-- Center the logo -->
+      <div class="flex-1 flex justify-center">
+        <img
+          src="@/assets/logo-2.png"
+          alt="Logo"
+          class="w-[120px] h-[120px] md:w-[150px] md:h-[150px]"
+        />
+      </div>
+   </nav>
   <h1 class="text-center text-3xl font-bold mb-4" style="margin-top: 3%; color: #0d3b66">
     Update Information
   </h1>
 
-  <div class="container mx-auto p-4" style="background-color: beige">
+  <div class="container mx-auto p-4">
     <form @submit.prevent="saveCountry" class="w-full h-auto p-6 relative rounded-xl p-2">
       <!-- ลบ class rounded ที่ซ้ำ -->
 
@@ -186,8 +195,9 @@ const handleSportChange = (sportId: string | number) => {
       </div>
 
       <div class="form-group mb-4 flex items-center">
-        <label for="sport" class="block mb-5 w-1/3">Sport:</label>
-        <BaseSelect v-model="country.sport.id" :options="sports" label="Sport" @onChange="handleSportChange"/>
+        <!-- <label for="sport" class="block mb-5 w-1/3">Sport:</label> -->
+        <BaseSelect v-model="country.sport.id" :options="sports" label="Sport" @onChange="handleSportChange"
+        class="mb-0 ml-2"/>
       </div>
 
       <div>
@@ -202,18 +212,27 @@ const handleSportChange = (sportId: string | number) => {
       >
         Submit
       </button>
+            <!-- Back Button -->
+      <button
+        class="back-button w-full py-2 text-white bg-blue-800 rounded hover:bg-blue-900 transition rounded-xl mt-4"
+        @click="goBack"
+      >
+        Back
+      </button>
     </form>
   </div>
-  <div class="mt-6 p-4 bg-white rounded-lg border border-gray-300 shadow-md">
-      <h2 class="text-lg font-semibold mb-2">Preview</h2>
-      <p><strong>Country Name: </strong> {{ country.countryName }}</p>
-      <p><strong>Description: </strong> {{ country.description }}</p>
-      <p><strong>Gold: </strong> {{ country.sport.gold_medals }}</p>
-      <p><strong>Sliver</strong> {{ country.sport.silver_medals }}</p>
-      <p><strong>Bronze: </strong> {{ country.sport.bronze_medals }}</p>
-      <p><strong>Sport: </strong> {{ country.sport.sportName }}</p>
-      <p><strong>ImageUrl: {{ country.images }}</strong></p>
-    </div>
+</div>
+      <div class="mt-6 p-4 bg-white rounded-lg border border-gray-300 shadow-md">
+        <h2 class="text-lg font-semibold mb-2">Preview</h2>
+        <p><strong>Country Name: </strong> {{ country.countryName }}</p>
+        <p><strong>Description: </strong> {{ country.description }}</p>
+        <p><strong>Gold: </strong> {{ country.sport.gold_medals }}</p>
+        <p><strong>Sliver</strong> {{ country.sport.silver_medals }}</p>
+        <p><strong>Bronze: </strong> {{ country.sport.bronze_medals }}</p>
+        <p><strong>Sport: </strong> {{ country.sport.sportName }}</p>
+        <p><strong>ImageUrl: {{ country.images }}</strong></p>
+      </div>
+
 </template>
 
 <style scoped></style>

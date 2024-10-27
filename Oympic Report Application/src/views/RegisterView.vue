@@ -2,17 +2,31 @@
 import { useMessageStore } from '@/stores/message';
 import * as yup from 'yup';
 import { useField, useForm } from 'vee-validate';
-import { Country } from '../../types';
+// import { Country } from '../../types';
 import { useAuthStore } from '@/stores/auth';
-import { toRefs, defineProps, ref } from 'vue';
+import { toRefs, defineProps, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import InputText from '@/components/InputText.vue';
 import ImageUpload from '@/components/ImageUpload.vue';
+import logo from '@/assets/Logo.png';
+import axios from 'axios';
+import type { RegisterUser } from '@/types';
+
+const registeruser = ref<RegisterUser> ({
+  firstname: '',
+  lastname: '',
+  username: '',
+  email: '',
+  password: '',
+  images: []
+})
 
 const messageStore = useMessageStore();
 const authStore = useAuthStore();
 const router = useRouter();
 const store = useMessageStore();
+//new
+// const profilePicture = ref<File | null>(null);
 
 const validationSchema = yup.object({
   email: yup.string().required('The email is required'),
@@ -36,7 +50,7 @@ const { value: lastname } = useField<string>('lastname');
 const { value: username } = useField<string>('username');
 const { value: email } = useField<string>('email');
 const { value: password } = useField<string>('password');
-const { value: images } = useField<File | null>('image');  // Add image field
+const { value: images } = useField<string[]>('images');  // Add image field
 
 const onSubmit = handleSubmit((values) => {
   authStore.register(values.firstname, values.lastname, values.username, values.email, values.password, values.images)
@@ -50,50 +64,77 @@ const onSubmit = handleSubmit((values) => {
     });
   console.log(values);
 });
-
-// Handle image upload and update the form's image field
-const handleImageUpload = (uploadedImage: File) => {
-  images.value = uploadedImage;
-};
+// watch(() => registeruser.value.images, (newImages) => {
+//     console.log("Updated images:", newImages);
+//     });
 </script>
 
 <template>
-  <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 1g:px-8">
-    <div class="text-center">
-      <h1 class="text-2xl font-bold mb-4">Register here</h1>
-      <!-- <p>Register here</p> -->
-      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" @submit.prevent="onSubmit">
-          <div>
-            <label for="firstname" class="block text-sm font-medium leading-6 text-gray-900">Firstname</label>
-            <InputText type="text" v-model="firstname" placeholder="Firstname" :error="errors['firstname']" />
-          </div>
-          <div>
-            <label for="lastname" class="block text-sm font-medium leading-6 text-gray-900">Lastname</label>
-            <InputText type="text" v-model="lastname" placeholder="Lastname" :error="errors['lastname']" />
-          </div>
-          <div>
-            <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
-            <InputText type="text" v-model="username" placeholder="Username" :error="errors['username']" />
-          </div>
-          <div>
-            <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
-            <InputText type="text" v-model="email" placeholder="Email address" :error="errors['email']" />
-          </div>
-          <div>
-            <div class="flex items-center justify-between">
-              <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+  <div class="relative bg-gradient-to-r from-white via-blue-400 via-purple-200 to-pink-300 min-h-screen">
+    <div class="relative">
+      <img :src="logo" alt="Logo" class="absolute top-0 left-0 w-20 h-20"/>
+    </div>
+    <div class="flex min-h-full justify-center px-6 py-12 lg:px-8">
+      <div class="flex w-full max-w-4xl">
+        <!-- Section for Image Upload (1/3) -->
+        <!-- Section for Form (2/3) -->
+        <div>
+          <div class="text-center">
+            <h1 class="text-2xl font-bold">Register here</h1>
+            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+              <form class="space-y-2 back" @submit.prevent="onSubmit">
+                <div class="w-full pr-6">
+                  <h3 class="text-xl font-bold-500 mb-4 mt-20">Upload Image:</h3>
+                  <ImageUpload v-model="images" />
+                  <div class="mt-6 p-4 bg-white rounded-lg border border-gray-300 shadow-md">
+                    <h2 class="text-lg font-semibold mb-2">Preview</h2>
+                    <p><strong>ImageUrl: {{ images }}</strong></p>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between">
+                    <label for="firstname" class="block text-sm font-medium leading-6 text-gray-900">Firstname</label>
+                  </div>
+                  <InputText type="text" v-model="firstname" placeholder="Firstname" 
+                  :error="errors['firstname']" class="w-full p-2 text-base"/>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between">
+                    <label for="lastname" class="block text-sm font-medium leading-6 text-gray-900">Lastname</label>
+                  </div>
+                  <InputText type="text" v-model="lastname" placeholder="Lastname" 
+                  :error="errors['lastname']" class="w-full p-2 text-base"/>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between">
+                    <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
+                  </div>
+                  <InputText type="text" v-model="username" placeholder="Username" 
+                  :error="errors['username']" class="w-full p-2 text-base"/>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between">
+                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                  </div>
+                  <InputText type="text" v-model="email" placeholder="Email address" 
+                  :error="errors['email']" class="w-full p-2 text-base"/>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between">
+                    <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                  </div>
+                  <InputText type="password" v-model="password" placeholder="Password" 
+                  :error="errors['password']" class="w-full p-2 text-base"/>
+                </div>
+                <div>
+                  <button type="submit" class="w-full py-2 px-4 text-white bg-red-600 hover:bg-red-700 transition rounded-xl">
+                    Register Me!
+                  </button>
+                </div>
+              </form>
             </div>
-            <InputText type="password" v-model="password" placeholder="Password" :error="errors['password']" />
           </div>
-          <div>
-            <h3>Upload Image:</h3>
-            <ImageUpload @upload="handleImageUpload" />
-          </div>
-          <div>
-            <button type="submit" class="w-30% py-2 px-2 text-white bg-red-600 rounded hover:bg-red-700 transition rounded-xl">Register Me!</button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
