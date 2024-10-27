@@ -58,7 +58,7 @@ export interface User {
   email: string;
   role: Role;
   //new
-  profileImage: string[]; 
+  images: string[]; 
   
 }
 export interface Role {
@@ -78,7 +78,7 @@ interface Comment {
   id: number;
   username: string;
   text: string;
-  profileImage: string[]; 
+  images: string[]; 
 }
 
 

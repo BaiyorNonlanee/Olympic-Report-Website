@@ -26,21 +26,22 @@ import { ref } from 'vue'
 
 export const useCommentsStore = defineStore('comments', () => {
   const commentsByCountry = ref<Record<string, {
-    profileImage: string; 
+    images: string; 
     id: number; 
     text: string; 
     username: string 
   }[]>>({})
 
-  const addComment = (countryName: string, commentText: string, username: string, profileImage: string) => {
+  const addComment = (countryName: string, commentText: string, username: string, images: string) => {
     if (!commentsByCountry.value[countryName]) {
       commentsByCountry.value[countryName] = []
     }
+    console.log("555" + images)
     commentsByCountry.value[countryName].push({
       id: Date.now(),
       text: commentText,
       username,
-      profileImage
+      images
     })
   }
 

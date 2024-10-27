@@ -113,8 +113,9 @@ export const useAuthStore = defineStore('auth', {
       return this.user?.id || 0 
     },
     // new
-    currentUserProfileImage(): string {
-      return this.user?.profileImage || '';  
+    currentUserProfileImage(): string[] {
+      console.log(this.user?.images)
+      return this.user?.images || [''];  
     },
     isAdmin(): boolean {
       return this.user?.roles.includes('ROLE_ADMIN') || false
