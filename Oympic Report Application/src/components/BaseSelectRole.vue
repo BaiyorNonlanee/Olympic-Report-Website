@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, withDefaults } from 'vue';
-import { Role } from '../../types'; // Assuming Role type is defined
+import { type Role } from '@/types'; // Assuming Role type is defined
 
 // Define props and emit events for v-model and role change
 const emit = defineEmits(['update:modelValue', 'onChange']);

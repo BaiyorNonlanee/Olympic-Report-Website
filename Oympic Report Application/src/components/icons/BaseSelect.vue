@@ -14,7 +14,8 @@ interface BaseSelectProps {
 
 // Default props
 const props = withDefaults(defineProps<BaseSelectProps>(), {
-  label: ''
+  label: '',
+  // modelValue: []
 });
 
 // Function to handle change and emit the value

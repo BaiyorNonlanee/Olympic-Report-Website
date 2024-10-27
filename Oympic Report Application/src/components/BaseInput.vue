@@ -1,18 +1,30 @@
 <script setup lang="ts">
 import { defineProps, withDefaults, defineEmits } from 'vue';
 
-const props = withDefaults(defineProps<{
-    label: string;
-    modelValue?: string | number;
-}>(), {
-    label: '',
-    // eslint-disable-next-line vue/require-valid-default-prop
+// const props = withDefaults(defineProps<{
+//     label: string;
+//     modelValue?: string | number;
+// }>(), {
+//     label: '',
+//     // eslint-disable-next-line vue/require-valid-default-prop
+//     modelValue: {
+//         type: [String, Number],
+//         require: false,
+//         default: ''
+//     }
+// });
+
+const props = defineProps({
+    label: { 
+        type: String,
+    default: ''
+    },
     modelValue: {
         type: [String, Number],
         require: false,
         default: ''
     }
-});
+})
 
 // Define emit
 const emit = defineEmits<{
