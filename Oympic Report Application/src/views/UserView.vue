@@ -176,36 +176,38 @@ const submitChanges = async () => {
         </RouterLink>
       </div>
 
-      <table
-        class="w-full max-w-screen-lg table-auto border-collapse bg-blue-100 rounded-[30px] overflow-hidden"
-      >
-        <thead class="border-b-2 border-gray-500">
-          <tr class="text-center bg-customPurple text-white">
-            <th class="Outfit px-2 py-2">ID</th>
-            <th class="Outfit px-2 py-2">First Name</th>
-            <th class="Outfit px-2 py-2">Last Name</th>
-            <th class="Outfit px-2 py-2">Username</th>
-            <th class="Outfit px-2 py-2">Email</th>
-            <th class="Outfit px-2 py-2">Roles</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in users" :key="user.id" class="text-center odd:bg-white h-16">
-            <td>{{ user.id }}</td>
-            <td>{{ user.firstname }}</td>
-            <td>{{ user.lastname }}</td>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>
-              <BaseSelectRole
-                v-model="user.selectedRole"
-                :options="roleOptions"
-                @onChange="updateSelectedRole(user.id, $event)"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto w-full"> <!-- Adding overflow for horizontal scrolling -->
+        <table
+          class="min-w-full table-auto border-collapse bg-blue-100 rounded-[30px] overflow-hidden"
+        >
+          <thead class="border-b-2 border-gray-500">
+            <tr class="text-center bg-customPurple text-white">
+              <th class="Outfit px-2 py-2 text-xs sm:text-base">ID</th>
+              <th class="Outfit px-2 py-2 text-xs sm:text-base">First Name</th>
+              <th class="Outfit px-2 py-2 text-xs sm:text-base">Last Name</th>
+              <th class="Outfit px-2 py-2 text-xs sm:text-base">Username</th>
+              <th class="Outfit px-2 py-2 text-xs sm:text-base">Email</th>
+              <th class="Outfit px-2 py-2 text-xs sm:text-base">Roles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in users" :key="user.id" class="text-center odd:bg-white h-16">
+              <td class="text-xs sm:text-base">{{ user.id }}</td>
+              <td class="text-xs sm:text-base">{{ user.firstname }}</td>
+              <td class="text-xs sm:text-base">{{ user.lastname }}</td>
+              <td class="text-xs sm:text-base">{{ user.username }}</td>
+              <td class="text-xs sm:text-base">{{ user.email }}</td>
+              <td>
+                <BaseSelectRole
+                  v-model="user.selectedRole"
+                  :options="roleOptions"
+                  @onChange="updateSelectedRole(user.id, $event)"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <!-- Pagination Controls -->
       <div class="flex w-full max-w-screen-lg justify-between mt-4">
@@ -238,3 +240,4 @@ const submitChanges = async () => {
     </div>
   </div>
 </template>
+

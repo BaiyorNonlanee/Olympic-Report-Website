@@ -4,8 +4,8 @@ import { onMounted } from 'vue'
 import InfoService from '@/services/InfoService'
 import olympicInfo from '@/components/olympicInfo.vue'
 import { type Country } from '@/types'
-import { useAuthStore } from '@/stores/auth';
-import { useRouter, useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/auth'
+import { useRouter, useRoute } from 'vue-router'
 
 const countries = ref<Country[]>([])
 // ref<Country[] | null>(null)
@@ -13,9 +13,10 @@ const totalCountry = ref(0)
 const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
-const allCountries = ref<Country[]>([]);
-const medalData = ref<Map<number, { totalGold: number; totalSilver: number; totalBronze: number }>>(new Map());
-
+const allCountries = ref<Country[]>([])
+const medalData = ref<Map<number, { totalGold: number; totalSilver: number; totalBronze: number }>>(
+  new Map()
+)
 
 const props = defineProps({
   page: {
@@ -39,11 +40,10 @@ const hasNextPage = computed(() => {
 
 const fetchCountries = async () => {
   try {
-    const response = await InfoService.getCountries(limit.value, page.value);
-    countries.value = response.data;
-    totalCountry.value = parseInt(response.headers['x-total-count']);
-        calculateAndSortCountries();
-
+    const response = await InfoService.getCountries(limit.value, page.value)
+    countries.value = response.data
+    totalCountry.value = parseInt(response.headers['x-total-count'])
+    calculateAndSortCountries()
   } catch (error) {
     console.error('Error fetching data:', error)
   }
@@ -55,30 +55,28 @@ watch(() => props.page, fetchCountries, { immediate: true })
 // Initial fetch when component mounts
 onMounted(fetchCountries)
 
-
 // Fetch countries
 watchEffect(() => {
   InfoService.getCountries(limit.value, page.value)
     .then((response) => {
       countries.value = []
-      countries.value = response.data;
-      totalCountry.value = parseInt(response.headers['x-total-count']);
-      console.log('Before sorting:', countries.value);
-      countries.value.forEach(country => {
-        console.log(`Country: ${country.countryName}, Gold: ${country.gold}`); // Fixed
-      });
+      countries.value = response.data
+      totalCountry.value = parseInt(response.headers['x-total-count'])
+      console.log('Before sorting:', countries.value)
+      countries.value.forEach((country) => {
+        console.log(`Country: ${country.countryName}, Gold: ${country.gold}`) // Fixed
+      })
 
       // calculateAndSortCountries();
-      console.log('After sorting:', countries.value);
+      console.log('After sorting:', countries.value)
     })
     .catch((error) => {
       console.error('Error fetching data:', error)
     })
-});
+})
 
 const calculateAndSortCountries = () => {
-  allCountries.value.forEach(country => {
-  });
+  allCountries.value.forEach((country) => {})
 
   // จัดเรียงประเทศตามจำนวนเหรียญทอง
   allCountries.value.sort((a, b) => b.gold - a.gold)
@@ -99,34 +97,37 @@ function logout() {
 }
 
 // รับข้อมูลเหรียญรวมจาก olympicInfo
-const updateMedals = (data: { countryId: number; totalGold: number; totalSilver: number; totalBronze: number }) => {
-  medalData.value.set(data.countryId, data);
-};
+const updateMedals = (data: {
+  countryId: number
+  totalGold: number
+  totalSilver: number
+  totalBronze: number
+}) => {
+  medalData.value.set(data.countryId, data)
+}
 
 // จัดอันดับประเทศตามเหรียญทอง
 const rankedCountries = computed(() => {
   return countries.value
-    .map(country => ({
+    .map((country) => ({
       ...country,
       totalGold: medalData.value.get(country.id)?.totalGold || 0,
       totalSilver: medalData.value.get(country.id)?.totalSilver || 0,
-      totalBronze: medalData.value.get(country.id)?.totalBronze || 0,
+      totalBronze: medalData.value.get(country.id)?.totalBronze || 0
     }))
     .sort((a, b) => {
       // เรียงตามเหรียญทอง
       if (b.totalGold !== a.totalGold) {
-        return b.totalGold - a.totalGold;
+        return b.totalGold - a.totalGold
       }
       // ถ้าเหรียญทองเท่ากัน เรียงตามเหรียญเงิน
       if (b.totalSilver !== a.totalSilver) {
-        return b.totalSilver - a.totalSilver;
+        return b.totalSilver - a.totalSilver
       }
       // ถ้าเหรียญเงินเท่ากัน เรียงตามเหรียญทองแดง
-      return b.totalBronze - a.totalBronze;
-    });
-});
-
-
+      return b.totalBronze - a.totalBronze
+    })
+})
 </script>
 
 <template>
@@ -199,32 +200,32 @@ const rankedCountries = computed(() => {
         </p>
 
         <!-- Form to Input Number of Countries -->
-        <div class="ml-5 mt-4 flex items-center">
-          <form>
-            <label for="countryLimit" class="mr-2">Number of countries per page:</label>
-            <input
-              id="countryLimit"
-              type="number"
-              v-model.number="userLimit"
-              class="px-2 py-1 border rounded mr-2"
-              min="1"
-              max="10"
-              step="1"
-              required
-            />
-          </form>
-          <div class="flex items-center justify-end">
-            <!-- Updated to justify-end -->
-            <span v-if="authStore.isAdmin || authStore.isMasterAdmin">
-              <RouterLink
-                to="/add-data"
-                class="inline-flex items-center px-4 py-2 bg-white text-black border border-black rounded-[30px]"
-              >
-                +  Add New Country 
-              </RouterLink>
-            </span>
-          </div>
-        </div>
+        <div class="ml-5 mt-4 flex items-center space-x-2 md:space-x-4">
+  <form class="flex items-center">
+    <label for="countryLimit" class="mr-2 text-sm md:text-base">Number of countries per page:</label>
+    <input
+      id="countryLimit"
+      type="number"
+      v-model.number="userLimit"
+      class="px-2 py-1 border rounded mr-2 text-sm md:text-base"
+      min="1"
+      max="10"
+      step="1"
+      required
+    />
+  </form>
+  <div class="flex items-center justify-end">
+    <span v-if="authStore.isAdmin || authStore.isMasterAdmin">
+      <RouterLink
+        to="/add-data"
+        class="inline-flex items-center px-3 py-1 bg-white text-black border border-black rounded-[30px] text-sm md:text-base"
+      >
+        + Add New Country
+      </RouterLink>
+    </span>
+  </div>
+</div>
+
         <div class="block md:flex justify-start w-full overflow-x-auto mt-4">
           <table
             class="w-full max-w-screen-lg border-collapse bg-customBlue rounded-[30px] overflow-hidden"
@@ -251,9 +252,13 @@ const rankedCountries = computed(() => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(country, index) in rankedCountries" :key="country.id" class="text-center odd:bg-white h-16">
-                <td>{{ (page-1)*limit+index + 1 }}</td>
-                <olympicInfo :country="country" @updateMedals="updateMedals"/>
+              <tr
+                v-for="(country, index) in rankedCountries"
+                :key="country.id"
+                class="text-center odd:bg-white h-16"
+              >
+                <td>{{ (page - 1) * limit + index + 1 }}</td>
+                <olympicInfo :country="country" @updateMedals="updateMedals" />
               </tr>
             </tbody>
           </table>
@@ -293,5 +298,5 @@ const rankedCountries = computed(() => {
     </div>
     <div class="flex justify-center mt-4 space-x-4">
     </div>
-    </div>
+  </div>
 </template>
