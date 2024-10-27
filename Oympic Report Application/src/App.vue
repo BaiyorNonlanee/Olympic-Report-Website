@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-
-// const router = useRouter();
-
+import { useRouter } from 'vue-router'
 </script>
 
 <template>
@@ -10,10 +7,3 @@ import { useRouter } from 'vue-router';
     <router-view />
   </div>
 </template>
-
-<style scoped>
-.header {
-  text-align: center;
-  align-items: center;
-}
-</style>

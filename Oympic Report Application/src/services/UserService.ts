@@ -1,4 +1,4 @@
-import type { User} from '@/types'
+import type { User } from '@/types'
 import apiClient from './AxiosClient'
 
 export default {
@@ -8,22 +8,20 @@ export default {
   getUserById(id: string) {
     return apiClient.get('/users/' + id)
   },
-  getUser(){
+  getUser() {
     return apiClient.get('/users')
   },
-  getRoleUser(){
+  getRoleUser() {
     return apiClient.get('/roles')
   },
-  editUserRole(id:number, userId:number, role:string) {
-    return apiClient.put('/api/v1/auth/edit-role', {  
+  editUserRole(id: number, userId: number, role: string) {
+    return apiClient.put('/api/v1/auth/edit-role', {
       id: id,
       userid: userId,
       role: role
-    });
+    })
   },
   getRoleUserById(id: string) {
-    return apiClient.get(`/roles/${id}`);
+    return apiClient.get(`/roles/${id}`)
   }
-    
 }
-

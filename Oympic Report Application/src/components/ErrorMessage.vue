@@ -1,11 +1,12 @@
 <script setup lang="ts">
-interface ErrorMessageProps{
-    id: string
+import { defineProps } from 'vue'
+interface ErrorMessageProps {
+  id: string
 }
 defineProps<ErrorMessageProps>()
 </script>
 <template>
-    <p aria-live="assertive" class="errorMessage" :id="id">
+  <p aria-live="assertive" class="errorMessage" :id="id">
     <slot />
-</p>
+  </p>
 </template>

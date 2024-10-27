@@ -8,7 +8,7 @@ import NotFoundView from '@/views/NotFoundView.vue'
 import NetworkErrorView from '@/views/NetWorkErrorView.vue'
 import InfoService from '@/services/InfoService'
 import nProgress from 'nprogress'
-import AddDataView from '@/views/event/DataFormView.vue' 
+import AddDataView from '@/views/event/DataFormView.vue'
 import MainPage from '@/App.vue'
 import { useInfoStore } from '@/stores/country'
 import LoginView from '@/views/LoginView.vue'
@@ -22,7 +22,7 @@ const router = createRouter({
       path: '/',
       name: 'home-view',
       component: HomeView,
-      props: route => ({
+      props: (route) => ({
         page: parseInt(route.query.page?.toString() || '1'),
         limit: parseInt(route.query.limit?.toString() || '5')
       })
@@ -50,8 +50,8 @@ const router = createRouter({
     {
       path: '/main-page',
       name: 'main-page',
-      component: MainPage,
-    },    
+      component: MainPage
+    },
     {
       path: '/404/:resource',
       name: '404-resource-view',
@@ -68,7 +68,7 @@ const router = createRouter({
       name: 'network-error-view',
       component: NetworkErrorView
     },
-    { 
+    {
       path: '/countries/:id',
       name: 'layout-view',
       component: LayoutView,

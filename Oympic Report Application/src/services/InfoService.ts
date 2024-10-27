@@ -9,8 +9,6 @@ export default {
     return apiClient.get('/countries/' + id)
   },
   saveCountry(country: any) {
-  return apiClient.post('/addCountries', country);
+    return apiClient.post('/addCountries', country)
   }
-    
 }
-

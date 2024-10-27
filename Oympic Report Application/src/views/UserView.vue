@@ -18,8 +18,6 @@ const route = useRoute()
 
 const currentPage = ref<number>(parseInt(route.query.page as string) || 1)
 const itemsPerPage = ref<number>(parseInt(route.query.itemsPerPage as string) || 4)
-
-// Computed properties to check if there is a next or previous page
 const hasNextPage = computed(() => currentPage.value < totalPages.value)
 const hasPreviousPage = computed(() => currentPage.value > 1)
 
@@ -32,17 +30,12 @@ const fetchData = async (page: number, limit: number) => {
     const totalCount = parseInt(userResponse.headers['x-total-count'] || '0', 10)
     numberOfUsers.value = totalCount
     totalPages.value = Math.ceil(totalCount / limit)
-
-    // Filter and transform role options, excluding MASTERADMIN
     roleOptions.value = rolesResponse.data
       .filter((role: string) => role !== 'ROLE_MASTERADMIN')
-      .map((role, index) => ({ id: index + 1, roles: role })) // Transform roles into the expected format
-
-    // Initialize users, filtering out those with ROLE_MASTERADMIN
+      .map((role, index) => ({ id: index + 1, roles: role }))
     users.value = userResponse.data
-      .filter((user) => !user.roles.includes('ROLE_MASTERADMIN')) // Remove users with MASTERADMIN role
+      .filter((user) => !user.roles.includes('ROLE_MASTERADMIN'))
       .map((user) => {
-        // Get the ID for the first available role that is not MASTERADMIN
         const currentRoleId =
           user.roles.length > 0
             ? roleOptions.value.find((roleOption) => roleOption.roles === user.roles[0])?.id
@@ -50,7 +43,7 @@ const fetchData = async (page: number, limit: number) => {
 
         return {
           ...user,
-          selectedRole: currentRoleId // Set selectedRole to the current role's ID or null if no valid roles
+          selectedRole: currentRoleId
         }
       })
   } catch (error) {
@@ -84,12 +77,12 @@ function prevPage() {
 const updateSelectedRole = async (userId: number, selectedRole: number) => {
   const user = users.value.find((user) => user.id === userId)
   if (user) {
-    user.selectedRole = selectedRole // Update the user's selected role
+    user.selectedRole = selectedRole
     try {
       await submitChanges()
       messageStore.updateMessage('Role change successful, please log in again.')
       setTimeout(() => {
-        messageStore.resetMessage() // Clear message after a few seconds
+        messageStore.resetMessage()
       }, 3000)
     } catch (error) {
       console.error('Error updating role:', error)
@@ -118,9 +111,8 @@ const toggleEdit = () => {
   isEditing.value = !isEditing.value
 }
 
-// Computed property to filter out MASTERADMIN
 const filteredRoleOptions = computed(() => {
-  return roleOptions.value.filter((role) => role.id !== 1) // Exclude MASTERADMIN
+  return roleOptions.value.filter((role) => role.id !== 1)
 })
 
 const submitChanges = async () => {
@@ -146,9 +138,6 @@ const submitChanges = async () => {
         return UserService.editUserRole(userId, user.id, selectedRoleName)
       })
     )
-
-    toggleEdit()
-    await fetchData()
   } catch (error) {
     console.error('Error updating roles:', error)
   }
@@ -176,7 +165,7 @@ const submitChanges = async () => {
         </RouterLink>
       </div>
 
-      <div class="overflow-x-auto w-full"> <!-- Adding overflow for horizontal scrolling -->
+      <div class="overflow-x-auto w-full">
         <table
           class="min-w-full table-auto border-collapse bg-blue-100 rounded-[30px] overflow-hidden"
         >
@@ -209,9 +198,7 @@ const submitChanges = async () => {
         </table>
       </div>
 
-      <!-- Pagination Controls -->
       <div class="flex w-full max-w-screen-lg justify-between mt-4">
-        <!-- Prev Page button aligned to the left -->
         <div>
           <button
             v-if="hasPreviousPage"
@@ -221,8 +208,6 @@ const submitChanges = async () => {
             &#60; Prev Page
           </button>
         </div>
-
-        <!-- Next Page button aligned to the right -->
         <div>
           <button
             v-if="hasNextPage"
@@ -234,10 +219,8 @@ const submitChanges = async () => {
         </div>
       </div>
     </div>
-
     <div v-else class="mt-4">
       <p>No users data available.</p>
     </div>
   </div>
 </template>
-

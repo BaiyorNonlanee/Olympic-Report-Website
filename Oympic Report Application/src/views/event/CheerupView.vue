@@ -18,7 +18,7 @@ const newComment = ref('')
 
 const addComment = () => {
   if (newComment.value.trim()) {
-    const username = authStore.currentUserName 
+    const username = authStore.currentUserName
     commentsStore.addComment(props.country.countryName, newComment.value, username)
     newComment.value = ''
   }
@@ -38,14 +38,14 @@ const addComment = () => {
     >
       <h2 class="text-2xl font-semibold mb-4 text-customBlue1 text-left">Comments:</h2>
     </div>
-    
-    <div class="w-95%" >
+
+    <div class="w-95%">
       <div
         v-for="comment in commentsStore.commentsByCountry[props.country.countryName]"
         :key="comment.id"
         class="bg-customBrown2 border-2 border-customBrown1 rounded-lg p-4 my-1.5 text-lg text-left"
       >
-      <strong>{{ comment.username }}:</strong>
+        <strong>{{ comment.username }}:</strong>
         {{ comment.text }}
       </div>
     </div>
